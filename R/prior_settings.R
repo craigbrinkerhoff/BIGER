@@ -1,4 +1,4 @@
-#' Options manager for BIGGEr default prior settings
+#' Options manager for BIGEER default prior settings
 #'
 #' @param ... (Optional) named settings to query or set.
 #' @param .__defaults See \code{?settings::option_manager}

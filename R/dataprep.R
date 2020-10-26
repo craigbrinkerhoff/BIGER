@@ -5,9 +5,9 @@
 # in one of your .R files
 # see rstanarm's 'rstanarm-package.R' file"
 
-#' Preprocess data for BIGGER estimation
+#' Preprocess data for BIGEER estimation
 #'
-#' Produces a bamdata object that can be passed to bam_estimate function
+#' Produces a bigeedata object that can be passed to bigee_estimate function
 #'
 #' @useDynLib BIGEER, .registration = TRUE
 #' @param w Matrix (or data frame) of widths: time as columns, space as rows
@@ -18,7 +18,7 @@
 #' @param seed RNG seed to use for sampling cross-sections, if nx > max_xs.
 #' @export
 
-bigge_data <- function(w,
+bigee_data <- function(w,
                      s,
                      dA,
                      max_xs = 30L,
@@ -34,8 +34,8 @@ bigge_data <- function(w,
                 Sobs = s,
                 dAobs = dA)
 
-  datalist <- bigge_check_args(datalist)
-  datalist <- bigge_check_nas(datalist)
+  datalist <- bigee_check_args(datalist)
+  datalist <- bigee_check_nas(datalist)
 
   nx <- nrow(datalist$Wobs)
   nt <- ncol(datalist$Wobs)
@@ -44,7 +44,7 @@ bigge_data <- function(w,
                         nx = nx,
                         nt = nt),
                    manning_ready = manning_ready,
-                   class = c("biggedata"))
+                   class = c("bigeedata"))
 
   if (nx > max_xs)
     out <- sample_xs(out, n = max_xs, seed = seed)
@@ -58,8 +58,8 @@ bigge_data <- function(w,
 #' - dimensions:
 #'     - all matrices have same dims
 #'
-#' @param datalist A list of BIGGE data inputs
-bigge_check_args <- function(datalist) {
+#' @param datalist A list of BIGEE data inputs
+bigee_check_args <- function(datalist) {
   matlist <- datalist[names(datalist)]
 
   if (!all(vapply(matlist, is, logical(1), "matrix")))
@@ -88,9 +88,9 @@ bigge_check_args <- function(datalist) {
 #' but now that ragged arrays are accommodated in the stanfile the
 #' operations are entirely different.
 #'
-#' @param datalist a list of BIGGEr inputs
+#' @param datalist a list of BIGEER inputs
 #' @importFrom stats median
-bigge_check_nas <- function(datalist) {
+bigee_check_nas <- function(datalist) {
 
   mats <- vapply(datalist, is.matrix, logical(1))
   nonas <- lapply(datalist[mats], function(x) !is.na(x))
@@ -136,20 +136,20 @@ bigge_check_nas <- function(datalist) {
   out
 }
 
-#' Establish prior hyperparameters for BIGGE estimation
+#' Establish prior hyperparameters for BIGEER estimation
 #'
-#' Produces a biggepriors object that can be passed to bigge_estimate function
+#' Produces a bigeepriors object that can be passed to bigee_estimate function
 #'
-#' @useDynLib BIGGEr, .registration = TRUE
-#' @param biggedata An object of class biggedata, as returned by \code{bigge_data}
+#' @useDynLib BIGEER, .registration = TRUE
+#' @param bigeedata An object of class bigeedata, as returned by \code{bigee_data}
 #' @param ... Optional manually set parameters. Unquoted expressions are allowed,
 #'   e.g. \code{logk600_sd = cv2sigma(0.8)}. Additionally, any variables present in
-#'   \code{biggedata} may be referenced, e.g. \code{lowerbound_logk600 = log(mean(Wobs)) + log(5)}
+#'   \code{bigeedata} may be referenced, e.g. \code{lowerbound_logk600 = log(mean(Wobs)) + log(5)}
 #' @export
 
-bigge_priors <- function(biggedata,
+bigee_priors <- function(bigeedata,
                        ...) {
-  force(biggedata)
+  force(bigeedata)
   paramset <- prior_settings("paramnames")
 
   myparams0 <- rlang::quos(..., .named = TRUE)
@@ -157,16 +157,16 @@ bigge_priors <- function(biggedata,
                       args = c(list(options = prior_settings), myparams0))
 
   quoparams <- myparams()[-1] # first one is parameter set
-  params <- lapply(quoparams, rlang::eval_tidy, data = biggedata)
+  params <- lapply(quoparams, rlang::eval_tidy, data = bigeedata)
 
-  if (!length(params[["logk600_sd"]]) == biggedata$nt)
-    params$logk600_sd <- rep(params$logk600_sd, length.out = biggedata$nt)
+  if (!length(params[["logk600_sd"]]) == bigeedata$nt)
+    params$logk600_sd <- rep(params$logk600_sd, length.out = bigeedata$nt)
 
   if (!identical(dim(params[["sigma_post"]]),
-                 as.integer(c(biggedata$nx, biggedata$nt)))) {
+                 as.integer(c(bigeedata$nx, bigeedata$nt)))) {
     params$sigma_post <- matrix(rep(params$sigma_post,
-                                   length.out = biggedata$nt * biggedata$nx),
-                               nrow = biggedata$nx)
+                                   length.out = bigeedata$nt * bigeedata$nx),
+                               nrow = bigeedata$nx)
   }
 
   #just priors the user wants to see
@@ -174,22 +174,22 @@ bigge_priors <- function(biggedata,
   sigma_paramset <- params[sigma_paramset]
 
   #total priors needed to run geoBAM
-  bigge_paramset <- c("lowerbound_logk600", "upperbound_logk600", "lowerbound_A0",
+  bigee_paramset <- c("lowerbound_logk600", "upperbound_logk600", "lowerbound_A0",
                       "upperbound_A0", "lowerbound_logn", "upperbound_logn",
                       "logA0_hat", "logn_hat","logk600_hat", "logA0_sd", "logn_sd", "logk600_sd")
-  biggeparams <- params[bigge_paramset]
+  bigeeparams <- params[bigee_paramset]
 
   riverType <- params[c("River_Type", "k600_River_Type")]
 
-  out <- list( 'river_types'=riverType, 'river_type_priors'=biggeparams, 'sigma_model'=sigma_paramset)
+  out <- list( 'river_types'=riverType, 'river_type_priors'=bigeeparams, 'sigma_model'=sigma_paramset)
   out <- structure(out,
-                   class = c("biggepriors"))
+                   class = c("bigeepriors"))
   out
 }
 
-compose_bigge_inputs <- function(biggedata, priors = bigge_priors(biggedata)) {
+compose_bigee_inputs <- function(bigeedata, priors = bigee_priors(bigeedata)) {
 
-  inps <- c(biggedata, priors)
+  inps <- c(bigeedata, priors)
 
   out <- inps
   out
@@ -197,33 +197,33 @@ compose_bigge_inputs <- function(biggedata, priors = bigge_priors(biggedata)) {
 }
 
 
-#' Take a random sample of a biggedata object's cross-sections.
+#' Take a random sample of a bigeedata object's cross-sections.
 #'
-#' @param biggedata a biggedata object, as returned by \code{bigge_data()}
+#' @param bigeedata a bigeedata object, as returned by \code{bigee_data()}
 #' @param n Number of cross-sections to
 #' @param seed option RNG seed, for reproducibility.
 #' @importFrom methods is
 #' @export
-sample_xs <- function(biggedata, n, seed = NULL) {
+sample_xs <- function(bigeedata, n, seed = NULL) {
 
-  stopifnot(is(biggedata, "biggedata"))
+  stopifnot(is(bigeedata, "bigeedata"))
 
-  if (n >= biggedata$nx)
-    return(biggedata)
+  if (n >= bigeedata$nx)
+    return(bigeedata)
 
   if (!is.null(seed))
     set.seed(seed)
-  keepxs <- sort(sample(1:biggedata$nx, size = n, replace = FALSE))
+  keepxs <- sort(sample(1:bigeedata$nx, size = n, replace = FALSE))
 
-  biggedata$nx <- n
-  biggedata$Wobs <- biggedata$Wobs[keepxs, ]
+  bigeedata$nx <- n
+  bigeedata$Wobs <- bigeedata$Wobs[keepxs, ]
 
-  if (!is.null(biggedata$Sobs)) {
-    biggedata$Sobs <- biggedata$Sobs[keepxs, ]
-    biggedata$dAobs <- biggedata$dAobs[keepxs, ]
+  if (!is.null(bigeedata$Sobs)) {
+    bigeedata$Sobs <- bigeedata$Sobs[keepxs, ]
+    bigeedata$dAobs <- bigeedata$dAobs[keepxs, ]
   }
 
-  biggedata
+  bigeedata
 }
 
 

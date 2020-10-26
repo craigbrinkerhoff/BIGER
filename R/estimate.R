@@ -1,11 +1,11 @@
 
-#' Estimate BIGGE
+#' Estimate BIGEE
 #'
-#' Fits a BIGGE model of one of several variants using Hamiltonian Monte Carlo.
+#' Fits a BIGEE model of one of several variants using Hamiltonian Monte Carlo.
 #'
-#' @param biggedata A bamdata object, as produced by \code{bigge_data()}
-#' @param biggepriors A bampriors object. If none is supplied, defaults are used
-#'   from calling \code{bigge_priors(biggedata)} (with no other arguments).
+#' @param bigeedata A bigeedata object, as produced by \code{bigee_data()}
+#' @param bigeepriors A bigeepriors object. If none is supplied, defaults are used
+#'   from calling \code{bigee_priors(bigeedata)} (with no other arguments).
 #' @param cores Number of processing cores for running chains in parallel.
 #'   See \code{?rstan::sampling}. Defaults to \code{parallel::detectCores()}.
 #' @param chains A positive integer specifying the number of Markov chains.
@@ -23,8 +23,8 @@
 #' @import rstan
 #' @export
 
-bigge_estimate <- function(biggedata,
-                         biggepriors = NULL,
+bigee_estimate <- function(bigeedata,
+                         bigeepriors = NULL,
                          cores = getOption("mc.cores", default = parallel::detectCores()),
                          chains = 3L,
                          iter = 1000L,
@@ -32,16 +32,16 @@ bigge_estimate <- function(biggedata,
                          pars = NULL,
                          include = FALSE,
                          ...) {
-  stopifnot(is(biggedata, "biggedata"))
-  if (is.null(biggepriors))
-    biggepriors <- bigge_priors(biggedata)
-  stopifnot(is(biggepriors, "biggepriors"))
+  stopifnot(is(bigeedata, "bigeedata"))
+  if (is.null(bigeepriors))
+    bigeepriors <- bigee_priors(bigeedata)
+  stopifnot(is(bigeepriors, "bigeepriors"))
 
   #Reforamte priors to a single list for stan
-  biggepriors <- c(biggepriors[[2]], biggepriors[[3]])
+  bigeepriors <- c(bigeepriors[[2]], bigeepriors[[3]])
 
-  biggeinputs <- compose_bigge_inputs(biggedata, biggepriors)
-  biggeinputs$inc_m <- 1
+  bigeeinputs <- compose_bigee_inputs(bigeedata, bigeepriors)
+  bigeeinputs$inc_m <- 1
 
   if (!is.null(stanmodel)) {
     stopifnot(inherits(stanmodel, "stanmodel"))
@@ -56,7 +56,7 @@ bigge_estimate <- function(biggedata,
               "Sact", "Wact", "dAact")
   }
 
-  out <- sampling(stanfit, data = biggeinputs,
+  out <- sampling(stanfit, data = bigeeinputs,
                   cores = cores, chains = chains, iter = iter,
                   pars = pars, include = include,
                   ...)

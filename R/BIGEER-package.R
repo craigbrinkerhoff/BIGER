@@ -1,6 +1,6 @@
 #' The 'BIGEER' package.
 #'
-#' @description A DESCRIPTION OF THE PACKAGE
+#' @description Uses Bayesian Inference + SWOT observations to estimate normalized gas transfer velocity from large rivers
 #'
 #' @docType package
 #' @name BIGEER-package

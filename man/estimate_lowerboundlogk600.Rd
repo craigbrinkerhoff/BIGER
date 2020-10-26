@@ -2,7 +2,7 @@
 % Please edit documentation in R/priorCalc.R
 \name{estimate_lowerboundlogk600}
 \alias{estimate_lowerboundlogk600}
-\title{Estimate lowerbound k600 prior using bigge data}
+\title{Estimate lowerbound k600 prior using bigee data}
 \usage{
 estimate_lowerboundlogk600(Wobs)
 }
@@ -10,5 +10,5 @@ estimate_lowerboundlogk600(Wobs)
 \item{Wobs}{Observed W,as a space-down, time-across matrix}
 }
 \description{
-Estimate lowerbound k600 prior using bigge data
+Estimate lowerbound k600 prior using bigee data
 }

@@ -2,7 +2,7 @@
 #priors are based on width classes from Ulseth et al. (2019) field dataset of k600
 
 
-#' Estimate k600_hat using bigge data
+#' Estimate k600_hat using bigee data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
@@ -17,7 +17,7 @@ estimate_logk600 <- function(Wobs){
   khat <- temp[class]
 }
 
-#' Estimate lowerbound k600 prior using bigge data
+#' Estimate lowerbound k600 prior using bigee data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
@@ -33,7 +33,7 @@ estimate_lowerboundlogk600 <- function(Wobs){
   kupper <- min(kupper, na.rm=T)
 }
 
-#' Estimate upperbound k600 prior using bigge data
+#' Estimate upperbound k600 prior using bigee data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
@@ -49,7 +49,7 @@ estimate_upperboundlogk600 <- function(Wobs){
   klower <- max(klower, na.rm=T)
 }
 
-#' Estimate k600 sd prior using bigge data
+#' Estimate k600 sd prior using bigee data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export

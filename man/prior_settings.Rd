@@ -2,7 +2,7 @@
 % Please edit documentation in R/prior_settings.R
 \name{prior_settings}
 \alias{prior_settings}
-\title{Options manager for BIGGEr default prior settings}
+\title{Options manager for BIGEER default prior settings}
 \usage{
 prior_settings(..., .__defaults = FALSE, .__reset = FALSE)
 }
@@ -14,5 +14,5 @@ prior_settings(..., .__defaults = FALSE, .__reset = FALSE)
 \item{.__reset}{See \code{?settings::option_manager}}
 }
 \description{
-Options manager for BIGGEr default prior settings
+Options manager for BIGEER default prior settings
 }

@@ -2,17 +2,17 @@
 % Please edit documentation in R/dataprep.R
 \name{sample_xs}
 \alias{sample_xs}
-\title{Take a random sample of a biggedata object's cross-sections.}
+\title{Take a random sample of a bigeedata object's cross-sections.}
 \usage{
-sample_xs(biggedata, n, seed = NULL)
+sample_xs(bigeedata, n, seed = NULL)
 }
 \arguments{
-\item{biggedata}{a biggedata object, as returned by \code{bigge_data()}}
+\item{bigeedata}{a bigeedata object, as returned by \code{bigee_data()}}
 
 \item{n}{Number of cross-sections to}
 
 \item{seed}{option RNG seed, for reproducibility.}
 }
 \description{
-Take a random sample of a biggedata object's cross-sections.
+Take a random sample of a bigeedata object's cross-sections.
 }
