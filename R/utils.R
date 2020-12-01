@@ -43,15 +43,21 @@ classify_func <- function(Wobs) {
 #'Classify river for k600 prior assignment
 #'
 #'@param Wobs observed widths matrix
-classify_func_k600 <- function(Wobs) {
+#'@param Sobs observed slopes matrix
+classify_func_k600 <- function(Wobs, Sobs) {
   Wobs[Wobs <= 0] <- NA
   lwbar <- mean(log(Wobs), na.rm=TRUE)
 
-  classes <- c(log(10),
+  Sobs[Sobs <= 0] <- NA
+  lsbar <- mean(Sobs, na.rm=TRUE)
+
+  classes <- c(log(10), #width thresholds
                log(50),
                log(100))
-  index <- ifelse(lwbar < classes[1], 1,
-                  ifelse(lwbar >= classes[1] & lwbar < classes[2], 2,
-                         ifelse(lwbar >= classes[2] & lwbar < classes[3],3,4)))
+  Sclass <- 0.05 #slope threshold for small rivers
+  index <- ifelse(lwbar < classes[1] & lsbar < Sclass, 1,
+                  ifelse(lwbar < classes[1] & lsbar >= Sclass, 5,
+                      ifelse(lwbar >= classes[1] & lwbar < classes[2], 2,
+                         ifelse(lwbar >= classes[2] & lwbar < classes[3],3,4))))
   return(index)
 }

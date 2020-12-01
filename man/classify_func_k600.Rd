@@ -4,10 +4,12 @@
 \alias{classify_func_k600}
 \title{Classify river for k600 prior assignment}
 \usage{
-classify_func_k600(Wobs)
+classify_func_k600(Wobs, Sobs)
 }
 \arguments{
 \item{Wobs}{observed widths matrix}
+
+\item{Sobs}{observed slopes matrix}
 }
 \description{
 Classify river for k600 prior assignment

@@ -4,7 +4,7 @@
 \alias{estimate_upperboundlogk600}
 \title{Estimate upperbound k600 prior using bigee data}
 \usage{
-estimate_upperboundlogk600(Wobs)
+estimate_upperboundlogk600(Wobs, Sobs)
 }
 \arguments{
 \item{Wobs}{Observed W,as a space-down, time-across matrix}

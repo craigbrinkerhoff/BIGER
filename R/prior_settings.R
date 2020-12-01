@@ -36,5 +36,5 @@ prior_settings <- settings::options_manager(
 
   #Classified river type
   River_Type=rlang::quo(apply(Wobs, 1, classify_func)),
-  k600_River_Type=rlang::quo(apply(Wobs, 2, classify_func_k600))
+  k600_River_Type=rlang::quo(apply(Wobs, 2, classify_func_k600, Sobs=Sobs))
 )

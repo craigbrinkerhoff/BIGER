@@ -6,14 +6,16 @@
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
-estimate_logk600 <- function(Wobs){
+estimate_logk600 <- function(Wobs, Sobs){
   Wobs[Wobs <= 0] <- NA
-  temp <- log(c(8.38158,
-            3.02036,
-            2.03414,
-            2.23876))
+  Sobs[Sobs <=0] <- NA
+  temp <- log(c(5.666775,
+                3.024020,
+                2.034140,
+                2.238760,
+                79.464785))
 
-  class <- apply(Wobs, 2, classify_func_k600)
+  class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   khat <- temp[class]
 }
 
@@ -21,14 +23,16 @@ estimate_logk600 <- function(Wobs){
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
-estimate_lowerboundlogk600 <- function(Wobs){
+estimate_lowerboundlogk600 <- function(Wobs, Sobs){
   Wobs[Wobs <= 0] <- NA
+  Sobs[Sobs <=0] <- NA
   temp <- log(c(0.10000,
-            0.65492,
-            0.42775,
-            0.56413))
+                0.65492,
+                0.42775,
+                0.56413,
+                1.80000))
 
-  class <- apply(Wobs, 2, classify_func_k600)
+  class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   kupper <- temp[class]
   kupper <- min(kupper, na.rm=T)
 }
@@ -37,14 +41,16 @@ estimate_lowerboundlogk600 <- function(Wobs){
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
-estimate_upperboundlogk600 <- function(Wobs){
+estimate_upperboundlogk600 <- function(Wobs, Sobs){
   Wobs[Wobs <= 0] <- NA
-  temp <- log(c(4117.80089,
-            143.40659,
-            24.31224,
-            20.62893))
+  Sobs[Sobs <=0] <- NA
+  temp <- log(c(176.93000,
+                143.40659,
+                24.31224,
+                20.62893,
+                4117.80089))
 
-  class <- apply(Wobs, 2, classify_func_k600)
+  class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   klower <- temp[class]
   klower <- max(klower, na.rm=T)
 }
@@ -53,14 +59,16 @@ estimate_upperboundlogk600 <- function(Wobs){
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
-estimate_logk600sd <- function(Wobs){
+estimate_logk600sd <- function(Wobs, Sobs){
   Wobs[Wobs <= 0] <- NA
-  temp <- log(c(355.358414,
-                16.680959,
+  Sobs[Sobs <=0] <- NA
+  temp <- log(c(20.274259,
+                16.988323,
                 4.536993,
-                3.044974))
+                3.044974,
+                653.966672))
 
-  class <- apply(Wobs, 2, classify_func_k600)
+  class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   ksd <- temp[class]
 }
 

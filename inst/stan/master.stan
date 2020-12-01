@@ -181,22 +181,26 @@ transformed parameters {
     logN_man[1] = ragged_col(logn[1], hasdat_man);
     logk600_man[1] = ragged_row(logk600, hasdat_man);
 
-    //RUle-based (using average obs width) model for k600. Basically, different regression parameters depending upon river size
-    if(mean(logWobs_man) < log(10)){
-      man_lhs[1] = 0.578*logWobs_man - 1.3005*logSobs_man - log(311.0) - 0.867*log(9.8);
-      man_rhs[1] = 0.578*(logA_man[1]) - 0.867*logN_man[1] - logk600_man[1];
+    //Rule-based (using average obs width) model for k600. Basically, different regression parameters depending upon river size
+    if(mean(logWobs_man) < log(10) && mean(Sobsvec_man) < 0.05){
+      man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*logSobs_man - log(111.58121) - 0.6488131*log(9.8);
+      man_rhs[1] = 0.4325421*(logA_man[1]) - 0.6488131*logN_man[1] - logk600_man[1];
+    }
+    if(mean(logWobs_man) < log(10) && mean(Sobsvec_man) >= 0.05){
+      man_lhs[1] = 0.8773377*logWobs_man - 1.97401*logSobs_man - log(792.63149) - 1.3160065*log(9.8);
+      man_rhs[1] = 0.8773377*(logA_man[1]) - 1.3160065*logN_man[1] - logk600_man[1];
     }
     if(mean(logWobs_man) < log(50) && mean(logWobs_man) >= log(10)){
-      man_lhs[1] = 0.434*logWobs_man - 0.9765*logSobs_man - log(101.3) - 0.651*log(9.8);
-      man_rhs[1] = 0.434*(logA_man[1]) - 0.651*logN_man[1] - logk600_man[1];
+      man_lhs[1] = 0.4416236*logWobs_man - 0.9936531*logSobs_man - log(109.04977) - 0.6624354*log(9.8);
+      man_rhs[1] = 0.4416236*(logA_man[1]) - 0.6624354*logN_man[1] - logk600_man[1];
     }
     if(mean(logWobs_man) < log(100) && mean(logWobs_man) >= log(50)){
-      man_lhs[1] = 0.291*logWobs_man - 0.6555*logSobs_man - log(31.84) - 0.437*log(9.8);
-      man_rhs[1] = 0.291*(logA_man[1]) - 0.437*logN_man[1] - logk600_man[1];
+      man_lhs[1] = 0.2910743*logWobs_man - 0.6549171*logSobs_man - log(31.84344) - 0.4366114*log(9.8);
+      man_rhs[1] = 0.2910743*(logA_man[1]) - 0.4366114*logN_man[1] - logk600_man[1];
     }
     if(mean(logWobs_man) >= log(100)){
-      man_lhs[1] = 0.181*logWobs_man - 0.408*logSobs_man - log(14.17) - 0.272*log(9.8);
-      man_rhs[1] = 0.181*(logA_man[1]) - 0.272*logN_man[1] - logk600_man[1];
+      man_lhs[1] = 0.1816556*logWobs_man - 0.4087251*logSobs_man - log(14.16939) - 0.2724834*log(9.8);
+      man_rhs[1] = 0.1816556*(logA_man[1]) - 0.2724834*logN_man[1] - logk600_man[1];
     }
   }
 }

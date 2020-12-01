@@ -4,7 +4,7 @@
 \alias{estimate_logk600sd}
 \title{Estimate k600 sd prior using bigee data}
 \usage{
-estimate_logk600sd(Wobs)
+estimate_logk600sd(Wobs, Sobs)
 }
 \arguments{
 \item{Wobs}{Observed W,as a space-down, time-across matrix}
