@@ -13,8 +13,8 @@ prior_settings <- settings::options_manager(
                  "River_Type", "k600_River_Type"),
 
   # Bounds on parameters
-  lowerbound_logk600 = rlang::quo(estimate_lowerboundlogk600(Wobs)),
-  upperbound_logk600 = rlang::quo(estimate_upperboundlogk600(Wobs)),
+  lowerbound_logk600 = rlang::quo(estimate_lowerboundlogk600(Wobs, Sobs)),
+  upperbound_logk600 = rlang::quo(estimate_upperboundlogk600(Wobs, Sobs)),
 
   lowerbound_A0 = rlang::quo(estimate_lowerboundA0(Wobs)),
   upperbound_A0 = rlang::quo(estimate_upperboundA0(Wobs)),
@@ -27,12 +27,12 @@ prior_settings <- settings::options_manager(
   # Hyperparameters via geoBAM & k600 prior
   logA0_hat = rlang::quo(estimate_logA0(Wobs)),
   logn_hat = rlang::quo(estimate_logn(Sobs, Wobs)),
-  logk600_hat = rlang::quo(estimate_logk600(Wobs)),
+  logk600_hat = rlang::quo(estimate_logk600(Wobs, Sobs)),
 
   #from geoBAM & k600 prior
   logA0_sd = rlang::quo(estimate_A0SD(Wobs)),
   logn_sd = rlang::quo(estimate_lognSD(Wobs)),
-  logk600_sd = rlang::quo(estimate_logk600sd(Wobs)),
+  logk600_sd = rlang::quo(estimate_logk600sd(Wobs, Sobs)),
 
   #Classified river type
   River_Type=rlang::quo(apply(Wobs, 1, classify_func)),
