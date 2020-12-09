@@ -17,7 +17,7 @@
 #' @param chains A positive integer specifying the number of Markov chains.
 #'   The default is 3.
 #' @param iter Number of iterations per chain (including warmup). Defaults to 1000.
-#' @param CI A postive integer between 0 and 1 indicating the confidence interval to return with the estimate. Default is 0.95, or 95%.
+#' @param CI A postive integer between 0 and 1 indicating the confidence interval to return with the estimate. Default is 0.95.
 #' @param chainExtract Either an integer specifying which chain(s) to extract statistics from,
 #'   or "all" (the default), in which case they are extracted from all chains.
 #' @param pars (passed to \code{rstan::sampling()}) A vector of character strings specifying
@@ -29,7 +29,6 @@
 #'   Monte Carlo sampler
 #' @import rstan
 #' @export
-
 biger_estimate <- function(bigerdata,
                          bigerpriors = NULL,
                          cores = getOption("mc.cores", default = parallel::detectCores()),
