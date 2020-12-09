@@ -33,7 +33,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_master");
-    reader.add_event(217, 215, "end", "model_master");
+    reader.add_event(221, 219, "end", "model_master");
     return reader;
 }
 template <typename T0__>
@@ -833,55 +833,68 @@ public:
                             ragged_row(logk600, hasdat_man, pstream__), 
                             "assigning variable logk600_man");
                 current_statement_begin__ = 185;
-                if (as_bool(logical_lt(mean(logWobs_man), stan::math::log(10)))) {
+                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(10))) && primitive_value(logical_lt(mean(Sobsvec_man), 0.05))))) {
                     current_statement_begin__ = 186;
                     stan::model::assign(man_lhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(subtract(multiply(0.578, logWobs_man), multiply(1.3005, logSobs_man)), stan::math::log(311.0)), (0.867 * stan::math::log(9.8))), 
+                                subtract(subtract(subtract(multiply(0.4325421, logWobs_man), multiply(0.9732197, logSobs_man)), stan::math::log(111.58121)), (0.6488131 * stan::math::log(9.8))), 
                                 "assigning variable man_lhs");
                     current_statement_begin__ = 187;
                     stan::model::assign(man_rhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(multiply(0.578, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.867, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                subtract(subtract(multiply(0.4325421, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.6488131, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
                                 "assigning variable man_rhs");
                 }
                 current_statement_begin__ = 189;
-                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(50))) && primitive_value(logical_gte(mean(logWobs_man), stan::math::log(10)))))) {
+                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(10))) && primitive_value(logical_gte(mean(Sobsvec_man), 0.05))))) {
                     current_statement_begin__ = 190;
                     stan::model::assign(man_lhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(subtract(multiply(0.434, logWobs_man), multiply(0.9765, logSobs_man)), stan::math::log(101.3)), (0.651 * stan::math::log(9.8))), 
+                                subtract(subtract(subtract(multiply(0.8773377, logWobs_man), multiply(1.97401, logSobs_man)), stan::math::log(792.63149)), (1.3160065 * stan::math::log(9.8))), 
                                 "assigning variable man_lhs");
                     current_statement_begin__ = 191;
                     stan::model::assign(man_rhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(multiply(0.434, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.651, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                subtract(subtract(multiply(0.8773377, get_base1(logA_man, 1, "logA_man", 1)), multiply(1.3160065, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
                                 "assigning variable man_rhs");
                 }
                 current_statement_begin__ = 193;
-                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(100))) && primitive_value(logical_gte(mean(logWobs_man), stan::math::log(50)))))) {
+                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(50))) && primitive_value(logical_gte(mean(logWobs_man), stan::math::log(10)))))) {
                     current_statement_begin__ = 194;
                     stan::model::assign(man_lhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(subtract(multiply(0.291, logWobs_man), multiply(0.6555, logSobs_man)), stan::math::log(31.84)), (0.437 * stan::math::log(9.8))), 
+                                subtract(subtract(subtract(multiply(0.4416236, logWobs_man), multiply(0.9936531, logSobs_man)), stan::math::log(109.04977)), (0.6624354 * stan::math::log(9.8))), 
                                 "assigning variable man_lhs");
                     current_statement_begin__ = 195;
                     stan::model::assign(man_rhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(multiply(0.291, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.437, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                subtract(subtract(multiply(0.4416236, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.6624354, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
                                 "assigning variable man_rhs");
                 }
                 current_statement_begin__ = 197;
-                if (as_bool(logical_gte(mean(logWobs_man), stan::math::log(100)))) {
+                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(100))) && primitive_value(logical_gte(mean(logWobs_man), stan::math::log(50)))))) {
                     current_statement_begin__ = 198;
                     stan::model::assign(man_lhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(subtract(multiply(0.181, logWobs_man), multiply(0.408, logSobs_man)), stan::math::log(14.17)), (0.272 * stan::math::log(9.8))), 
+                                subtract(subtract(subtract(multiply(0.2910743, logWobs_man), multiply(0.6549171, logSobs_man)), stan::math::log(31.84344)), (0.4366114 * stan::math::log(9.8))), 
                                 "assigning variable man_lhs");
                     current_statement_begin__ = 199;
                     stan::model::assign(man_rhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(multiply(0.181, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.272, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                subtract(subtract(multiply(0.2910743, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.4366114, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                "assigning variable man_rhs");
+                }
+                current_statement_begin__ = 201;
+                if (as_bool(logical_gte(mean(logWobs_man), stan::math::log(100)))) {
+                    current_statement_begin__ = 202;
+                    stan::model::assign(man_lhs, 
+                                stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
+                                subtract(subtract(subtract(multiply(0.1816556, logWobs_man), multiply(0.4087251, logSobs_man)), stan::math::log(14.16939)), (0.2724834 * stan::math::log(9.8))), 
+                                "assigning variable man_lhs");
+                    current_statement_begin__ = 203;
+                    stan::model::assign(man_rhs, 
+                                stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
+                                subtract(subtract(multiply(0.1816556, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.2724834, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
                                 "assigning variable man_rhs");
                 }
             }
@@ -949,18 +962,18 @@ public:
                 }
             }
             // model body
-            current_statement_begin__ = 206;
+            current_statement_begin__ = 210;
             if (as_bool(inc_m)) {
-                current_statement_begin__ = 207;
+                current_statement_begin__ = 211;
                 lp_accum__.add(lognormal_log<propto__>(add(get_base1(A0, 1, "A0", 1), get_base1(dA_shift, 1, "dA_shift", 1)), logA0_hat, logA0_sd));
-                current_statement_begin__ = 208;
+                current_statement_begin__ = 212;
                 lp_accum__.add(normal_log<propto__>(get_base1(logn, 1, "logn", 1), logn_hat, logn_sd));
-                current_statement_begin__ = 209;
+                current_statement_begin__ = 213;
                 lp_accum__.add(normal_log<propto__>(get_base1(logk600, 1, "logk600", 1), logk600_hat, logk600_sd));
             }
-            current_statement_begin__ = 212;
+            current_statement_begin__ = 216;
             if (as_bool(inc_m)) {
-                current_statement_begin__ = 213;
+                current_statement_begin__ = 217;
                 lp_accum__.add(normal_log<propto__>(get_base1(man_lhs, 1, "man_lhs", 1), get_base1(man_rhs, 1, "man_rhs", 1), sigmavec_man));
             }
         } catch (const std::exception& e) {
@@ -1129,55 +1142,68 @@ public:
                             ragged_row(logk600, hasdat_man, pstream__), 
                             "assigning variable logk600_man");
                 current_statement_begin__ = 185;
-                if (as_bool(logical_lt(mean(logWobs_man), stan::math::log(10)))) {
+                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(10))) && primitive_value(logical_lt(mean(Sobsvec_man), 0.05))))) {
                     current_statement_begin__ = 186;
                     stan::model::assign(man_lhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(subtract(multiply(0.578, logWobs_man), multiply(1.3005, logSobs_man)), stan::math::log(311.0)), (0.867 * stan::math::log(9.8))), 
+                                subtract(subtract(subtract(multiply(0.4325421, logWobs_man), multiply(0.9732197, logSobs_man)), stan::math::log(111.58121)), (0.6488131 * stan::math::log(9.8))), 
                                 "assigning variable man_lhs");
                     current_statement_begin__ = 187;
                     stan::model::assign(man_rhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(multiply(0.578, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.867, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                subtract(subtract(multiply(0.4325421, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.6488131, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
                                 "assigning variable man_rhs");
                 }
                 current_statement_begin__ = 189;
-                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(50))) && primitive_value(logical_gte(mean(logWobs_man), stan::math::log(10)))))) {
+                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(10))) && primitive_value(logical_gte(mean(Sobsvec_man), 0.05))))) {
                     current_statement_begin__ = 190;
                     stan::model::assign(man_lhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(subtract(multiply(0.434, logWobs_man), multiply(0.9765, logSobs_man)), stan::math::log(101.3)), (0.651 * stan::math::log(9.8))), 
+                                subtract(subtract(subtract(multiply(0.8773377, logWobs_man), multiply(1.97401, logSobs_man)), stan::math::log(792.63149)), (1.3160065 * stan::math::log(9.8))), 
                                 "assigning variable man_lhs");
                     current_statement_begin__ = 191;
                     stan::model::assign(man_rhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(multiply(0.434, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.651, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                subtract(subtract(multiply(0.8773377, get_base1(logA_man, 1, "logA_man", 1)), multiply(1.3160065, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
                                 "assigning variable man_rhs");
                 }
                 current_statement_begin__ = 193;
-                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(100))) && primitive_value(logical_gte(mean(logWobs_man), stan::math::log(50)))))) {
+                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(50))) && primitive_value(logical_gte(mean(logWobs_man), stan::math::log(10)))))) {
                     current_statement_begin__ = 194;
                     stan::model::assign(man_lhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(subtract(multiply(0.291, logWobs_man), multiply(0.6555, logSobs_man)), stan::math::log(31.84)), (0.437 * stan::math::log(9.8))), 
+                                subtract(subtract(subtract(multiply(0.4416236, logWobs_man), multiply(0.9936531, logSobs_man)), stan::math::log(109.04977)), (0.6624354 * stan::math::log(9.8))), 
                                 "assigning variable man_lhs");
                     current_statement_begin__ = 195;
                     stan::model::assign(man_rhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(multiply(0.291, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.437, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                subtract(subtract(multiply(0.4416236, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.6624354, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
                                 "assigning variable man_rhs");
                 }
                 current_statement_begin__ = 197;
-                if (as_bool(logical_gte(mean(logWobs_man), stan::math::log(100)))) {
+                if (as_bool((primitive_value(logical_lt(mean(logWobs_man), stan::math::log(100))) && primitive_value(logical_gte(mean(logWobs_man), stan::math::log(50)))))) {
                     current_statement_begin__ = 198;
                     stan::model::assign(man_lhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(subtract(multiply(0.181, logWobs_man), multiply(0.408, logSobs_man)), stan::math::log(14.17)), (0.272 * stan::math::log(9.8))), 
+                                subtract(subtract(subtract(multiply(0.2910743, logWobs_man), multiply(0.6549171, logSobs_man)), stan::math::log(31.84344)), (0.4366114 * stan::math::log(9.8))), 
                                 "assigning variable man_lhs");
                     current_statement_begin__ = 199;
                     stan::model::assign(man_rhs, 
                                 stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
-                                subtract(subtract(multiply(0.181, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.272, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                subtract(subtract(multiply(0.2910743, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.4366114, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
+                                "assigning variable man_rhs");
+                }
+                current_statement_begin__ = 201;
+                if (as_bool(logical_gte(mean(logWobs_man), stan::math::log(100)))) {
+                    current_statement_begin__ = 202;
+                    stan::model::assign(man_lhs, 
+                                stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
+                                subtract(subtract(subtract(multiply(0.1816556, logWobs_man), multiply(0.4087251, logSobs_man)), stan::math::log(14.16939)), (0.2724834 * stan::math::log(9.8))), 
+                                "assigning variable man_lhs");
+                    current_statement_begin__ = 203;
+                    stan::model::assign(man_rhs, 
+                                stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), 
+                                subtract(subtract(multiply(0.1816556, get_base1(logA_man, 1, "logA_man", 1)), multiply(0.2724834, get_base1(logN_man, 1, "logN_man", 1))), get_base1(logk600_man, 1, "logk600_man", 1)), 
                                 "assigning variable man_rhs");
                 }
             }

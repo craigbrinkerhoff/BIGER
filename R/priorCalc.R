@@ -6,7 +6,7 @@
 #priors are based on width classes from Ulseth et al. (2019) field dataset of k600
 
 
-#' Estimate k600_hat using bigee data
+#' Estimate k600_hat using biger data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
@@ -23,7 +23,7 @@ estimate_logk600 <- function(Wobs, Sobs){
   khat <- temp[class]
 }
 
-#' Estimate k600 sd prior using bigee data
+#' Estimate k600 sd prior using biger data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export

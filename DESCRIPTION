@@ -1,5 +1,5 @@
-Package: BIGEER
-Title: Bayesian Inference of Gas Evasion Efficiency for Rivers
+Package: BIGER
+Title: Bayesian Inference/Inversion of the Gas Evasion Rate
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Craig",
@@ -27,5 +27,5 @@ LinkingTo:
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
 RoxygenNote: 7.1.1
-URL: https://github.com/craigbrinkerhoff/BIGEER
-BugReports: https://github.com/craigbrinkerhoff/BIGEER/issues
+URL: https://github.com/craigbrinkerhoff/BIGER
+BugReports: https://github.com/craigbrinkerhoff/BIGER/issues
