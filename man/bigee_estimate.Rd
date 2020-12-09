@@ -10,7 +10,8 @@ bigee_estimate(
   cores = getOption("mc.cores", default = parallel::detectCores()),
   chains = 3L,
   iter = 1000L,
-  stanmodel = NULL,
+  CI = 0.95,
+  chainExtract = "all",
   pars = NULL,
   include = FALSE,
   ...
@@ -30,8 +31,10 @@ The default is 3.}
 
 \item{iter}{Number of iterations per chain (including warmup). Defaults to 1000.}
 
-\item{stanmodel}{A \code{stanmodel} object to use instead of one of the default
-models.}
+\item{CI}{A postive integer between 0 and 1 indicating the confidence interval to return with the estimate. Default is 0.95, or 95%.}
+
+\item{chainExtract}{Either an integer specifying which chain(s) to extract statistics from,
+or "all" (the default), in which case they are extracted from all chains.}
 
 \item{pars}{(passed to \code{rstan::sampling()}) A vector of character strings specifying
 parameters of interest to be returned in the stanfit object. If not specified,

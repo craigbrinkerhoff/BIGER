@@ -1,3 +1,5 @@
+#Functions to prepare SWOT observations for the inversion model
+
 
 # Using advice from read-and-delete-me:
 # "Be sure to add useDynLib(mypackage, .registration = TRUE) to the NAMESPACE file

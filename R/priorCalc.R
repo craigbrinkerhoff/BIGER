@@ -1,3 +1,7 @@
+#Functions for default prior setup for algorithm (n and A0 functions from Brinkerhoff etal 2020 --> geoBAM-Expert algorithm)
+
+
+
 #k600 prior calculations--------------------------------------------------------------------------------------------------
 #priors are based on width classes from Ulseth et al. (2019) field dataset of k600
 
@@ -17,42 +21,6 @@ estimate_logk600 <- function(Wobs, Sobs){
 
   class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   khat <- temp[class]
-}
-
-#' Estimate lowerbound k600 prior using bigee data
-#'
-#' @param Wobs Observed W,as a space-down, time-across matrix
-#' @export
-estimate_lowerboundlogk600 <- function(Wobs, Sobs){
-  Wobs[Wobs <= 0] <- NA
-  Sobs[Sobs <=0] <- NA
-  temp <- log(c(0.10000,
-                0.65492,
-                0.42775,
-                0.56413,
-                1.80000))
-
-  class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
-  kupper <- temp[class]
-  kupper <- min(kupper, na.rm=T)
-}
-
-#' Estimate upperbound k600 prior using bigee data
-#'
-#' @param Wobs Observed W,as a space-down, time-across matrix
-#' @export
-estimate_upperboundlogk600 <- function(Wobs, Sobs){
-  Wobs[Wobs <= 0] <- NA
-  Sobs[Sobs <=0] <- NA
-  temp <- log(c(176.93000,
-                143.40659,
-                24.31224,
-                20.62893,
-                4117.80089))
-
-  class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
-  klower <- temp[class]
-  klower <- max(klower, na.rm=T)
 }
 
 #' Estimate k600 sd prior using bigee data

@@ -1,3 +1,9 @@
+#Default prior setup for algorithm
+
+
+
+
+
 #' Options manager for BIGEER default prior settings
 #'
 #' @param ... (Optional) named settings to query or set.
@@ -13,8 +19,8 @@ prior_settings <- settings::options_manager(
                  "River_Type", "k600_River_Type"),
 
   # Bounds on parameters
-  lowerbound_logk600 = rlang::quo(estimate_lowerboundlogk600(Wobs, Sobs)),
-  upperbound_logk600 = rlang::quo(estimate_upperboundlogk600(Wobs, Sobs)),
+  lowerbound_logk600 = log(0.001), #global-scope
+  upperbound_logk600 = log(500), #global-scope
 
   lowerbound_A0 = rlang::quo(estimate_lowerboundA0(Wobs)),
   upperbound_A0 = rlang::quo(estimate_upperboundA0(Wobs)),
@@ -22,7 +28,7 @@ prior_settings <- settings::options_manager(
   upperbound_logn = rlang::quo(estimate_upperboundlogn(Wobs)),
 
   # *Known* likelihood parameters
-  sigma_post = 0.30, #obtained from monte carlo sampling of k600 model
+  sigma_post = 1.3, #mean sigma from 8,000 MC simulations of k600 model uncertainity
 
   # Hyperparameters via geoBAM & k600 prior
   logA0_hat = rlang::quo(estimate_logA0(Wobs)),
