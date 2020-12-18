@@ -5,13 +5,13 @@
 
 
 
-#' Estimate BIGER
+#' Estimate BIKER
 #'
-#' Fits a BIGER model of one of several variants using Hamiltonian Monte Carlo.
+#' Fits a BIKER model of one of several variants using Hamiltonian Monte Carlo.
 #'
-#' @param bigerdata A bigerdata object, as produced by \code{biger_data()}
-#' @param bigerpriors A bigerpriors object. If none is supplied, defaults are used
-#'   from calling \code{biger_priors(bigerdata)} (with no other arguments).
+#' @param bikerdata A bikerdata object, as produced by \code{biker_data()}
+#' @param bikerpriors A bikerpriors object. If none is supplied, defaults are used
+#'   from calling \code{biker_priors(bikerdata)} (with no other arguments).
 #' @param cores Number of processing cores for running chains in parallel.
 #'   See \code{?rstan::sampling}. Defaults to \code{parallel::detectCores()}.
 #' @param chains A positive integer specifying the number of Markov chains.
@@ -29,8 +29,8 @@
 #'   Monte Carlo sampler
 #' @import rstan
 #' @export
-biger_estimate <- function(bigerdata,
-                         bigerpriors = NULL,
+biker_estimate <- function(bikerdata,
+                         bikerpriors = NULL,
                          cores = getOption("mc.cores", default = parallel::detectCores()),
                          chains = 3L,
                          iter = 1000L,
@@ -39,16 +39,16 @@ biger_estimate <- function(bigerdata,
                          pars = NULL,
                          include = FALSE,
                          ...) {
-  stopifnot(is(bigerdata, "bigerdata"))
-  if (is.null(bigerpriors))
-    bigerpriors <- biger_priors(bigerdata)
-  stopifnot(is(bigerpriors, "bigerpriors"))
+  stopifnot(is(bikerdata, "bikerdata"))
+  if (is.null(bikerpriors))
+    bikerpriors <- biker_priors(bikerdata)
+  stopifnot(is(bikerpriors, "bikerpriors"))
 
   #reformat priors to a single list for stan
-  bigerpriors <- c(bigerpriors[[2]], bigerpriors[[3]])
+  bikerpriors <- c(bikerpriors[[2]], bikerpriors[[3]])
 
-  bigerinputs <- compose_biger_inputs(bigerdata, bigerpriors)
-  bigerinputs$inc_m <- 1
+  bikerinputs <- compose_biker_inputs(bikerdata, bikerpriors)
+  bikerinputs$inc_m <- 1
 
   stanfit <- stanmodels[["master"]]
 
@@ -59,7 +59,7 @@ biger_estimate <- function(bigerdata,
   }
 
   #generate stanfit object (i.e. sample from the posterior using stan)
-  fit <- sampling(stanfit, data = bigerinputs,
+  fit <- sampling(stanfit, data = bikerinputs,
                   cores = cores, chains = chains, iter = iter,
                   pars = pars, include = include,
                   ...)

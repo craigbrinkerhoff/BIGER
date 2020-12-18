@@ -2,7 +2,7 @@
 % Please edit documentation in R/priorCalc.R
 \name{estimate_logk600}
 \alias{estimate_logk600}
-\title{Estimate k600_hat using biger data}
+\title{Estimate k600_hat using biker data}
 \usage{
 estimate_logk600(Wobs, Sobs)
 }
@@ -10,5 +10,5 @@ estimate_logk600(Wobs, Sobs)
 \item{Wobs}{Observed W,as a space-down, time-across matrix}
 }
 \description{
-Estimate k600_hat using biger data
+Estimate k600_hat using biker data
 }

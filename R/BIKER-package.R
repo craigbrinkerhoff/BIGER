@@ -1,11 +1,11 @@
-#' The 'BIGER' package.
+#' The 'BIKER' package.
 #'
 #' @description Uses Bayesian Inference + SWOT observations to estimate normalized gas transfer velocity from large rivers
 #'
 #' @docType package
-#' @name BIGER-package
-#' @aliases BIGEER
-#' @useDynLib BIGER, .registration = TRUE
+#' @name BIKER-package
+#' @aliases BIKER
+#' @useDynLib BIKER, .registration = TRUE
 #' @import methods
 #' @import Rcpp
 #' @importFrom rstan sampling

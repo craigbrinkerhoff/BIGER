@@ -1,5 +1,5 @@
-Package: BIGER
-Title: Bayesian Inference/Inversion of the Gas Evasion Rate
+Package: BIKER
+Title: Bayesian Inference/Inversion of the K600 Evasion Rate
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Craig",
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "cbrinkerhoff@umass.edu",
            comment = c(ORCID = "0000-0001-6701-4835"))
-Description: Uses Bayesian inference + SWOT observations to estimate the normalized gas transfer velocity from large rivers, no in situ info needed.
+Description: Uses Bayesian inference + SWOT observations to estimate the normalized gas transfer velocity from rivers, no in situ info needed.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -27,5 +27,5 @@ LinkingTo:
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
 RoxygenNote: 7.1.1
-URL: https://github.com/craigbrinkerhoff/BIGER
-BugReports: https://github.com/craigbrinkerhoff/BIGER/issues
+URL: https://github.com/craigbrinkerhoff/BIKER
+BugReports: https://github.com/craigbrinkerhoff/BIKER/issues
