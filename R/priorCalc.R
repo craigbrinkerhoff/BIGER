@@ -19,10 +19,14 @@ estimate_logk600 <- function(Wobs, Sobs){
    #               2.238760,
    #               79.464785))
 
-   temp <- log(c(1.488830, #from Ulseth slope
-                 1.595335,
-                 3.251540,
-                 15.750000))
+   temp <- c(-0.345658, #from Brinkerhoff etal 2019 slope
+             0.262208,
+             0.767171,
+             1.103433,
+             1.598252,
+             2.698485,
+             3.476117,
+             5.690369)
 
   class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   khat <- temp[class]
@@ -41,10 +45,14 @@ estimate_logk600sd <- function(Wobs, Sobs){
   #                3.044974,
   #                653.966672))
 
-  temp <- log(c(4.302692, #from ulseth slope
-                2.438019,
-                4.280058,
-                424.644256))
+  temp <- c(0.290411, #from ulseth slope
+            0.232240,
+            0.272945,
+            0.254534,
+            0.509442,
+            0.734547,
+            0.897449,
+            1.112044)
 
   class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   ksd <- temp[class]

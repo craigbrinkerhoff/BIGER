@@ -62,8 +62,12 @@ classify_func_k600 <- function(Wobs, Sobs) {
   #                     ifelse(wbar >= classes[1] & wbar < classes[2], 2,
   #                        ifelse(wbar >= classes[2] & wbar < classes[3],3,4))))
 
-  index <- ifelse(sbar < 0.0001, 1, #for slope classes
-                  ifelse(sbar <= 0.001, 2,
-                         ifelse(sbar <= 0.01, 3,4)))
+  index <- ifelse(sbar < 0.00005, 1, #for slope classes
+                  ifelse(sbar <= 0.0001, 2,
+                         ifelse(sbar <= 0.0005, 3,
+                                ifelse(sbar <= 0.001, 4,
+                                       ifelse(sbar <= 0.005, 5,
+                                              ifelse(sbar <= 0.01, 6,
+                                                     ifelse(sbar <= 0.05, 7, 8)))))))
   return(index)
 }
