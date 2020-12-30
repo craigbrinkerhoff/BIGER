@@ -13,16 +13,16 @@
 estimate_logk600 <- function(Wobs, Sobs){
   Wobs[Wobs <= 0] <- NA
   Sobs[Sobs <=0] <- NA
-  # temp <- log(c(5.666775, #from Ulseth dataset
-  #               3.024020,
-  #               2.034140,
-  #               2.238760,
-  #               79.464785))
-  temp <- c(1.126981, #from geoBAM dataset
-            1.062855,
-            0.847710,
-            0.681127,
-            5.171385)
+   # temp <- log(c(5.666775, #from Ulseth dataset
+   #               3.024020,
+   #               2.034140,
+   #               2.238760,
+   #               79.464785))
+
+   temp <- log(c(1.488830, #from Ulseth slope
+                 1.595335,
+                 3.251540,
+                 15.750000))
 
   class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   khat <- temp[class]
@@ -36,15 +36,15 @@ estimate_logk600sd <- function(Wobs, Sobs){
   Wobs[Wobs <= 0] <- NA
   Sobs[Sobs <=0] <- NA
   # temp <- log(c(20.274259, #from ulseth dataset
-  #               16.988323,
-  #               4.536993,
-  #               3.044974,
-  #               653.966672))
-  temp <- c(1.091480, #from geoBAM dataset
-            1.199214,
-            1.201964,
-            1.028955,
-            0.988949)
+  #                16.988323,
+  #                4.536993,
+  #                3.044974,
+  #                653.966672))
+
+  temp <- log(c(4.302692, #from ulseth slope
+                2.438019,
+                4.280058,
+                424.644256))
 
   class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
   ksd <- temp[class]
