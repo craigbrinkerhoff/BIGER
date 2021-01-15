@@ -57,17 +57,17 @@ classify_func_k600 <- function(Wobs, Sobs) {
   classes <- c(10, 50, 100) #width thresholds
 
   Sclass <- 0.05 #slope threshold for small rivers
-  # index <- ifelse(wbar < classes[1] & sbar < Sclass, 1,
-  #                 ifelse(wbar < classes[1] & sbar >= Sclass, 5,
-  #                     ifelse(wbar >= classes[1] & wbar < classes[2], 2,
-  #                        ifelse(wbar >= classes[2] & wbar < classes[3],3,4))))
+   index <- ifelse(wbar < classes[1] & sbar < Sclass, 1,
+                   ifelse(wbar < classes[1] & sbar >= Sclass, 5,
+                       ifelse(wbar >= classes[1] & wbar < classes[2], 2,
+                          ifelse(wbar >= classes[2] & wbar < classes[3],3,4))))
 
-  index <- ifelse(sbar < 0.00005, 1, #for slope classes
-                  ifelse(sbar <= 0.0001, 2,
-                         ifelse(sbar <= 0.0005, 3,
-                                ifelse(sbar <= 0.001, 4,
-                                       ifelse(sbar <= 0.005, 5,
-                                              ifelse(sbar <= 0.01, 6,
-                                                     ifelse(sbar <= 0.05, 7, 8)))))))
+  # index <- ifelse(sbar < 0.00005, 1, #for slope classes
+  #                 ifelse(sbar <= 0.0001, 2,
+  #                        ifelse(sbar <= 0.0005, 3,
+  #                               ifelse(sbar <= 0.001, 4,
+  #                                      ifelse(sbar <= 0.005, 5,
+  #                                             ifelse(sbar <= 0.01, 6,
+  #                                                    ifelse(sbar <= 0.05, 7, 8)))))))
   return(index)
 }
