@@ -16,7 +16,8 @@ prior_settings <- settings::options_manager(
                  "sigma_post",
                  "logA0_hat", "logn_hat", "logk600_hat",
                  "logA0_sd", "logn_sd", "logk600_sd",
-                 "River_Type", "k600_River_Type"),
+                 "River_Type", "k600_River_Type",
+                 "Serr_sd", 'dAerr_sd'),
 
   # Bounds on parameters
   lowerbound_logk600 = log(0.001), #global-scope
@@ -42,5 +43,9 @@ prior_settings <- settings::options_manager(
 
   #Classified river type
   River_Type=rlang::quo(apply(Wobs, 1, classify_func)),
-  k600_River_Type=rlang::quo(apply(Wobs, 2, classify_func_k600, Sobs=Sobs))
+  k600_River_Type=rlang::quo(apply(Wobs, 2, classify_func_k600, Sobs=Sobs)),
+
+  #SWOT Observation errors
+  Serr_sd = 1.7e-5, #Durand et al. 2020 [unitless]: systematic SWOT error + layover error + random error
+  dAerr_sd = rlang::quo(dA_sigma_func(Wobs)) #Durand et al. 2020 [m]
 )

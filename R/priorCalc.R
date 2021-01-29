@@ -13,23 +13,20 @@
 estimate_logk600 <- function(Wobs, Sobs){
   Wobs[Wobs <= 0] <- NA
   Sobs[Sobs <=0] <- NA
-    temp <- log(c(5.666775, #from Ulseth dataset
-                  3.024020,
-                  2.034140,
-                  2.238760,
-                  79.464785))
 
-   # temp <- c(-0.345658, #from Brinkerhoff etal 2019 slope
-   #           0.262208,
-   #           0.767171,
-   #           1.103433,
-   #           1.598252,
-   #           2.698485,
-   #           3.476117,
-   #           5.690369)
+  #Mark-style approach
+  colSobs <- colMeans(log(Sobs), na.rm=T)
+  khat <- ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
 
-  class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
-  khat <- temp[class]
+  # #geoBAM style approach
+  # temp <- log(c(5.666775, #from Ulseth dataset
+  #                 3.024020,
+  #                 2.034140,
+  #                 2.238760,
+  #                 79.464785))
+  #
+  # class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
+  # khat <- temp[class]
 }
 
 #' Estimate k600 sd prior using biker data
@@ -39,23 +36,19 @@ estimate_logk600 <- function(Wobs, Sobs){
 estimate_logk600sd <- function(Wobs, Sobs){
   Wobs[Wobs <= 0] <- NA
   Sobs[Sobs <=0] <- NA
-   temp <- log(c(20.274259, #from ulseth dataset
-                  16.988323,
-                  4.536993,
-                  3.044974,
-                  653.966672))
 
-  # temp <- c(0.290411, #from ulseth slope
-  #           0.232240,
-  #           0.272945,
-  #           0.254534,
-  #           0.509442,
-  #           0.734547,
-  #           0.897449,
-  #           1.112044)
+  #Mark-style approach
+  ksd <- rep(1.023, ncol(Wobs))
 
-  class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
-  ksd <- temp[class]
+  # #geoBAM approach
+  # temp <- log(c(20.274259, #from ulseth dataset
+  #                 16.988323,
+  #                 4.536993,
+  #                 3.044974,
+  #                 653.966672))
+  #
+  # class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
+  # ksd <- temp[class]
 }
 
 

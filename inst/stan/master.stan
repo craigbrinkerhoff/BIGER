@@ -91,6 +91,7 @@ data {
 
   // Options
   int<lower=0, upper=1> inc_m; // Include Manning? 0=no; 1=yes;
+  int<lower=0, upper=1> meas_err; //0=no, 1=yes;
 
   // Dimensions
   int<lower=0> nx; // number of reaches
@@ -105,6 +106,9 @@ data {
   vector[nt] Sobs[nx]; // measured slopes
   vector[nt] dAobs[nx]; // measured partial area
   vector[nx] dA_shift; // adjustment from min to median
+
+  real<lower=0> Serr_sd; //measurement error slopes
+  real<lower=0> dAerr_sd; //measurement error slopes
 
   // Hard bounds on parameters
   real lowerbound_A0; // These must be scalars, unfortunately.
@@ -164,6 +168,9 @@ parameters {
   vector<lower=lowerbound_logk600,upper=upperbound_logk600>[nt] logk600;
   vector<lower=lowerbound_logn,upper=upperbound_logn>[nx] logn[inc_m]; //for reach-defined n
   vector<lower=lowerbound_A0,upper=upperbound_A0>[nx] A0[inc_m];
+
+  vector<lower=0>[ntot_man] Sact[meas_err * inc_m];
+  vector[ntot_man] dApos_act[meas_err * inc_m];
 }
 
 
@@ -177,30 +184,60 @@ transformed parameters {
 
   // Manning params
   if (inc_m) {
-    logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
-    logN_man[1] = ragged_col(logn[1], hasdat_man);
-    logk600_man[1] = ragged_row(logk600, hasdat_man);
+    if (meas_err) { //Measurement error in slopes and heights
+      logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
+      logN_man[1] = ragged_col(logn[1], hasdat_man);
+      logk600_man[1] = ragged_row(logk600, hasdat_man);
 
-    //Rule-based (using average obs width) model for k600. Basically, different regression parameters depending upon river size
-    if(mean(Wobsvec_man) < 10 && mean(Sobsvec_man) < 0.05){ #0-10m, S > 0.05
-      man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*logSobs_man - log(111.58121) - 0.6488131*log(9.8);
-      man_rhs[1] = 0.4325421*(logA_man[1]) - 0.6488131*logN_man[1] - logk600_man[1];
+      //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
+      if(mean(Wobsvec_man) < 10 && mean(log(Sact[1])) < 0.05){ //0-10m, S > 0.05
+        man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*log(Sact[1]) - log(111.58121) - 0.6488131*log(9.8);
+        man_rhs[1] = 0.4325421*(logA_man[1]) - 0.6488131*logN_man[1] - logk600_man[1];
+      }
+      if(mean(Wobsvec_man) < 10 && mean(log(Sact[1])) >= 0.05){ //0-10m, S < 0.05
+        man_lhs[1] = 0.8773377*logWobs_man - 1.97401*log(Sact[1]) - log(792.63149) - 1.3160065*log(9.8);
+        man_rhs[1] = 0.8773377*(logA_man[1]) - 1.3160065*logN_man[1] - logk600_man[1];
+      }
+      if(mean(Wobsvec_man) < 50 && mean(Wobsvec_man) >= 10){ //10-50m
+        man_lhs[1] = 0.4416236*logWobs_man - 0.9936531*log(Sact[1]) - log(109.04977) - 0.6624354*log(9.8);
+        man_rhs[1] = 0.4416236*(logA_man[1]) - 0.6624354*logN_man[1] - logk600_man[1];
+      }
+      if(mean(Wobsvec_man) < 100 && mean(Wobsvec_man) >= 50){ //50-100m
+        man_lhs[1] = 0.2910743*logWobs_man - 0.6549171*log(Sact[1]) - log(31.84344) - 0.4366114*log(9.8);
+        man_rhs[1] = 0.2910743*(logA_man[1]) - 0.4366114*logN_man[1] - logk600_man[1];
+      }
+      if(mean(Wobsvec_man) >= 100){ //100+m
+        man_lhs[1] = 0.1816556*logWobs_man - 0.4087251*log(Sact[1]) - log(14.16939) - 0.2724834*log(9.8);
+        man_rhs[1] = 0.1816556*(logA_man[1]) - 0.2724834*logN_man[1] - logk600_man[1];
+      }
     }
-    if(mean(Wobsvec_man) < 10 && mean(Sobsvec_man) >= 0.05){ #0-10m, S < 0.05
-      man_lhs[1] = 0.8773377*logWobs_man - 1.97401*logSobs_man - log(792.63149) - 1.3160065*log(9.8);
-      man_rhs[1] = 0.8773377*(logA_man[1]) - 1.3160065*logN_man[1] - logk600_man[1];
-    }
-    if(mean(Wobsvec_man) < 50 && mean(Wobsvec_man) >= 10){ #10-50m
-      man_lhs[1] = 0.4416236*logWobs_man - 0.9936531*logSobs_man - log(109.04977) - 0.6624354*log(9.8);
-      man_rhs[1] = 0.4416236*(logA_man[1]) - 0.6624354*logN_man[1] - logk600_man[1];
-    }
-    if(mean(Wobsvec_man) < 100 && mean(Wobsvec_man) >= 50){ #50-100m
-      man_lhs[1] = 0.2910743*logWobs_man - 0.6549171*logSobs_man - log(31.84344) - 0.4366114*log(9.8);
-      man_rhs[1] = 0.2910743*(logA_man[1]) - 0.4366114*logN_man[1] - logk600_man[1];
-    }
-    if(mean(Wobsvec_man) >= 100){ #100+m
-      man_lhs[1] = 0.1816556*logWobs_man - 0.4087251*logSobs_man - log(14.16939) - 0.2724834*log(9.8);
-      man_rhs[1] = 0.1816556*(logA_man[1]) - 0.2724834*logN_man[1] - logk600_man[1];
+
+    else { //No measurement error in slopes and heights
+      logN_man[1] = ragged_col(logn[1], hasdat_man);
+      logk600_man[1] = ragged_row(logk600, hasdat_man);
+      logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
+
+      //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
+      if(mean(Wobsvec_man) < 10 && mean(Sobsvec_man) < 0.05){ //0-10m, S > 0.05
+        man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*logSobs_man - log(111.58121) - 0.6488131*log(9.8);
+        man_rhs[1] = 0.4325421*(logA_man[1]) - 0.6488131*logN_man[1] - logk600_man[1];
+      }
+      if(mean(Wobsvec_man) < 10 && mean(Sobsvec_man) >= 0.05){ //0-10m, S < 0.05
+        man_lhs[1] = 0.8773377*logWobs_man - 1.97401*logSobs_man - log(792.63149) - 1.3160065*log(9.8);
+        man_rhs[1] = 0.8773377*(logA_man[1]) - 1.3160065*logN_man[1] - logk600_man[1];
+      }
+      if(mean(Wobsvec_man) < 50 && mean(Wobsvec_man) >= 10){ //10-50m
+        man_lhs[1] = 0.4416236*logWobs_man - 0.9936531*logSobs_man - log(109.04977) - 0.6624354*log(9.8);
+        man_rhs[1] = 0.4416236*(logA_man[1]) - 0.6624354*logN_man[1] - logk600_man[1];
+      }
+      if(mean(Wobsvec_man) < 100 && mean(Wobsvec_man) >= 50){ //50-100m
+        man_lhs[1] = 0.2910743*logWobs_man - 0.6549171*logSobs_man - log(31.84344) - 0.4366114*log(9.8);
+        man_rhs[1] = 0.2910743*(logA_man[1]) - 0.4366114*logN_man[1] - logk600_man[1];
+      }
+      if(mean(Wobsvec_man) >= 100){ //100+m
+        man_lhs[1] = 0.1816556*logWobs_man - 0.4087251*logSobs_man - log(14.16939) - 0.2724834*log(9.8);
+        man_rhs[1] = 0.1816556*(logA_man[1]) - 0.2724834*logN_man[1] - logk600_man[1];
+      }
     }
   }
 }
@@ -211,9 +248,19 @@ model {
     A0[1] + dA_shift[1] ~ lognormal(logA0_hat, logA0_sd);
     logn[1] ~ normal(logn_hat, logn_sd);
     logk600[1] ~ normal(logk600_hat, logk600_sd);
-}
-  //Run actual model
+  }
+
+  //likelihood
   if (inc_m){
-      man_lhs[1] ~ normal(man_rhs[1], sigmavec_man);
+    man_lhs[1] ~ normal(man_rhs[1], sigmavec_man);
+  }
+
+  //latent variables for measurement error
+  if (meas_err){
+    if (inc_m) {
+      Sact[1] ~ normal(Sobsvec_man, Serr_sd); // S meas err
+      dApos_act[1] ~ normal(dApos_obs, dAerr_sd); // dA meas err
+      target += -log(Sact[1]);
+    }
   }
 }

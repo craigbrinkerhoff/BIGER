@@ -8,6 +8,7 @@ biker_estimate(
   bikerdata,
   bikerpriors = NULL,
   cores = getOption("mc.cores", default = parallel::detectCores()),
+  meas_error = FALSE,
   chains = 3L,
   iter = 1000L,
   CI = 0.95,

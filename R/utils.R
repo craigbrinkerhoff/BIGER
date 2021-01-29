@@ -71,3 +71,13 @@ classify_func_k600 <- function(Wobs, Sobs) {
   #                                                    ifelse(sbar <= 0.05, 7, 8)))))))
   return(index)
 }
+
+#'Assign measurement error for dA using river width and Durand et al. 2020
+#'
+#'@param Wobs observed widths matrix
+dA_sigma_func <- function(Wobs){
+  Wobs[Wobs <= 0] <- NA
+
+  #errors from systematic SWOT error + layover error + random error
+  dAerr_sigma <- 0.104*sqrt(2)*mean(Wobs, na.rm=T) #sigma_dA = sigma_h*W*sqrt(2)
+}

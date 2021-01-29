@@ -32,6 +32,7 @@
 biker_estimate <- function(bikerdata,
                          bikerpriors = NULL,
                          cores = getOption("mc.cores", default = parallel::detectCores()),
+                         meas_error = FALSE,
                          chains = 3L,
                          iter = 1000L,
                          CI = 0.95,
@@ -49,6 +50,7 @@ biker_estimate <- function(bikerdata,
 
   bikerinputs <- compose_biker_inputs(bikerdata, bikerpriors)
   bikerinputs$inc_m <- 1
+  bikerinputs$meas_err <- ifelse(meas_error && !reparam, 1, 0)
 
   stanfit <- stanmodels[["master"]]
 
