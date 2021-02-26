@@ -190,11 +190,11 @@ transformed parameters {
       logk600_man[1] = ragged_row(logk600, hasdat_man);
 
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
-      if(mean(Wobsvec_man) < 10 && mean(log(Sact[1])) < 0.05){ //0-10m, S > 0.05
+      if(mean(Wobsvec_man) < 10 && mean(Sact[1]) < 0.05){ //0-10m, S > 0.05
         man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*log(Sact[1]) - log(111.58121) - 0.6488131*log(9.8);
         man_rhs[1] = 0.4325421*(logA_man[1]) - 0.6488131*logN_man[1] - logk600_man[1];
       }
-      if(mean(Wobsvec_man) < 10 && mean(log(Sact[1])) >= 0.05){ //0-10m, S < 0.05
+      if(mean(Wobsvec_man) < 10 && mean(Sact[1]) >= 0.05){ //0-10m, S < 0.05
         man_lhs[1] = 0.8773377*logWobs_man - 1.97401*log(Sact[1]) - log(792.63149) - 1.3160065*log(9.8);
         man_rhs[1] = 0.8773377*(logA_man[1]) - 1.3160065*logN_man[1] - logk600_man[1];
       }
