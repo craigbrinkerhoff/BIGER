@@ -40,6 +40,7 @@ prior_hyperparameters$sigma_model$sigma_post = 0.25
 #for the full list of hyperparameters that can be changed, run this:
 prior_settings()
 ```
+One can also manually specify these within the biker_priors() function. Consult the help key in R to see examples. The 'cv2sigma()' function is included to do this if you want to specify sigmpa hyperparameters by the cofficient of variation cv.
 
 ## Troubleshooting
-Use the help key in RStudio to get function options and email cbrinkerhoff[at]umass[dot]edu for further help!
+Use the help key in R to get function options and email cbrinkerhoff[at]umass[dot]edu for further help!

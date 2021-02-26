@@ -3,6 +3,7 @@
 export(biker_data)
 export(biker_estimate)
 export(biker_priors)
+export(cv2sigma)
 export(estimate_A0SD)
 export(estimate_logA0)
 export(estimate_logk600)
