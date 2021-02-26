@@ -57,7 +57,7 @@ biker_estimate <- function(bikerdata,
   if (is.null(pars)) {
     pars <- c("man_rhs", "logWSpart",
               "logk600tn", "logk600nbar",
-              "Sact", "Wact", "dAact")
+              "Sact", "dAact")
   }
 
   #generate stanfit object (i.e. sample from the posterior using stan)
