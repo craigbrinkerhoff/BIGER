@@ -181,7 +181,7 @@ biker_priors <- function(bikerdata,
                       "logA0_hat", "logn_hat","logk600_hat", "logA0_sd", "logn_sd", "logk600_sd")
   bikerparams <- params[biker_paramset]
 
-  riverType <- params[c("River_Type", "k600_River_Type")]
+  riverType <- params[c("River_Type")]
 
   out <- list( 'river_types'=riverType, 'river_type_priors'=bikerparams, 'sigma_model'=sigma_paramset)
   out <- structure(out,

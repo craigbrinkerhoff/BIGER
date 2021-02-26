@@ -3,8 +3,6 @@
 
 
 #k600 prior calculations--------------------------------------------------------------------------------------------------
-#priors are based on width classes from Ulseth et al. (2019) field dataset of k600
-
 
 #' Estimate k600_hat using biker data
 #'
@@ -17,16 +15,6 @@ estimate_logk600 <- function(Wobs, Sobs){
   #Mark-style approach
   colSobs <- colMeans(log(Sobs), na.rm=T)
   khat <- ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
-
-  # #geoBAM style approach
-  # temp <- log(c(5.666775, #from Ulseth dataset
-  #                 3.024020,
-  #                 2.034140,
-  #                 2.238760,
-  #                 79.464785))
-  #
-  # class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
-  # khat <- temp[class]
 }
 
 #' Estimate k600 sd prior using biker data
@@ -39,20 +27,10 @@ estimate_logk600sd <- function(Wobs, Sobs){
 
   #Mark-style approach
   ksd <- rep(1.023, ncol(Wobs))
-
-  # #geoBAM approach
-  # temp <- log(c(20.274259, #from ulseth dataset
-  #                 16.988323,
-  #                 4.536993,
-  #                 3.044974,
-  #                 653.966672))
-  #
-  # class <- apply(Wobs, 2, classify_func_k600, Sobs=Sobs)
-  # ksd <- temp[class]
 }
 
 
-# Prior calculation using expert classification framework------------------------------------------------------------------
+# Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------
 #class 17 are 'big' riverrs
 
 #' Estimate base cross-sectional area using bam data

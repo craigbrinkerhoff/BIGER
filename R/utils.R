@@ -1,17 +1,6 @@
 # Some additional utility functions
 
 
-
-
-
-#' Convert coefficient of variation to sigma parameter of lognormal diistribution
-#'
-#' @param cv Coefficient of variation
-#' @export
-cv2sigma <- function (cv) {
-  sqrt(log(cv^2 + 1))
-}
-
 #Functions for classifying rivers----------------------------------------------------------------------
 
 #'Classify river for expert framework
@@ -40,35 +29,6 @@ classify_func <- function(Wobs) {
                5.287893051) #median width of each river type
   index <- ifelse(lwbar > maxWidth, 17, which.min(abs(classes-lwbar))) #17 for big rivers
   index <- ifelse(lwsd >= 0.45, 16, index)  #16 for width-variable rivers, which overrides 'big' rivers
-  return(index)
-}
-
-#'Classify river for k600 prior assignment
-#'
-#'@param Wobs observed widths matrix
-#'@param Sobs observed slopes matrix
-classify_func_k600 <- function(Wobs, Sobs) {
-  Wobs[Wobs <= 0] <- NA
-  wbar <- mean(Wobs, na.rm=TRUE)
-
-  Sobs[Sobs <= 0] <- NA
-  sbar <- mean(Sobs, na.rm=TRUE)
-
-  classes <- c(10, 50, 100) #width thresholds
-
-  Sclass <- 0.05 #slope threshold for small rivers
-   index <- ifelse(wbar < classes[1] & sbar < Sclass, 1,
-                   ifelse(wbar < classes[1] & sbar >= Sclass, 5,
-                       ifelse(wbar >= classes[1] & wbar < classes[2], 2,
-                          ifelse(wbar >= classes[2] & wbar < classes[3],3,4))))
-
-  # index <- ifelse(sbar < 0.00005, 1, #for slope classes
-  #                 ifelse(sbar <= 0.0001, 2,
-  #                        ifelse(sbar <= 0.0005, 3,
-  #                               ifelse(sbar <= 0.001, 4,
-  #                                      ifelse(sbar <= 0.005, 5,
-  #                                             ifelse(sbar <= 0.01, 6,
-  #                                                    ifelse(sbar <= 0.05, 7, 8)))))))
   return(index)
 }
 
