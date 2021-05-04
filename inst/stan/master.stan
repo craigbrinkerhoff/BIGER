@@ -220,7 +220,7 @@ transformed parameters {
       logk600_man[1] = ragged_row(logk600, hasdat_man);
       logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
 
-      man_lhs[1] = 0.4386267*logWobs_man - 0.98691*log(logSobs_man[1]) - log(110.4762) - 0.657940*log(9.8);
+      man_lhs[1] = 0.4386267*logWobs_man - 0.98691*logSobs_man[1] - log(110.4762) - 0.657940*log(9.8);
       man_rhs[1] = 0.4386267*(logA_man[1]) - 0.657940*logN_man[1] - logk600_man[1];
 
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
