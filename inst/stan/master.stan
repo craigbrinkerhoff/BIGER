@@ -189,9 +189,15 @@ transformed parameters {
       logN_man[1] = ragged_col(logn[1], hasdat_man);
       logk600_man[1] = ragged_row(logk600, hasdat_man);
 
-        man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
-        man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk600_man[1];
+//My model
+      //man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
+      //man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk600_man[1];
 
+//Wang kl20 model
+      man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
+      man_rhs[1] = log(logk600_man[1]) + 0.5*logA_man[1];
+
+//OLD MODEL
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
    //   if(mean(Wobsvec_man) < 10 && mean(Sact[1]) < 0.05){ //0-10m, S > 0.05
   //      man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*log(Sact[1]) - log(111.58121) - 0.6488131*log(9.8);
@@ -220,9 +226,15 @@ transformed parameters {
       logk600_man[1] = ragged_row(logk600, hasdat_man);
       logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
 
-      man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man[1] - log(85.10025) - 0.59957*log(9.8);
-      man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk600_man[1];
+//My model
+    //  man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man[1] - log(85.10025) - 0.59957*log(9.8);
+    //  man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk600_man[1];
 
+//Wang kl20 model
+      man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
+      man_rhs[1] = log(logk600_man[1]) + 0.5*logA_man[1];
+
+//OLD MODEL
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
   //    if(mean(Wobsvec_man) < 10 && mean(Sobsvec_man) < 0.05){ //0-10m, S > 0.05
   //      man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*logSobs_man - log(111.58121) - 0.6488131*log(9.8);
