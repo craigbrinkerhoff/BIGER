@@ -34,7 +34,7 @@ estimate_logk_k600 <- function(Sobs){
 estimate_logksd_ko2 <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  ksd <- rep(0.77, ncol(W_obs))
+  ksd <- rep(0.77, ncol(Sobs))
 }
 
 #' Estimate k sd prior using biker data for k600 model
@@ -44,7 +44,7 @@ estimate_logksd_ko2 <- function(Sobs){
 estimate_logksd_k600 <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  ksd <- rep(1.023, ncol(W_obs))
+  ksd <- rep(1.023, ncol(Sobs))
 }
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------
