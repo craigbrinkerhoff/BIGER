@@ -2,33 +2,46 @@
 
 
 
-#k600 prior calculations--------------------------------------------------------------------------------------------------
+#k prior calculations--------------------------------------------------------------------------------------------------
 
-#' Estimate k600_hat using biker data
+#' Estimate k_hat using biker data
 #'
-#' @param Wobs Observed W,as a space-down, time-across matrix
+#' @param Sobs Observed S,as a space-down, time-across matrix
+#' @param k600flag binary flag for model ran: 0 for KO2, 1 for k600
 #' @export
-estimate_logk600 <- function(Wobs, Sobs){
-  Wobs[Wobs <= 0] <- NA
+estimate_logk <- function(k600flag, Sobs){
   Sobs[Sobs <=0] <- NA
 
-  #Mark-style approach
   colSobs <- colMeans(log(Sobs), na.rm=T)
-  khat <- 3.63383 + 0.41124*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
+  khat <- ifelse(k600flag == 1, 3.63383 + 0.41124*colSobs, 3.3492 + 0.3661*colSobs) #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
 }
 
-#' Estimate k600 sd prior using biker data
+#' Estimate k sd prior using biker data
 #'
-#' @param Wobs Observed W,as a space-down, time-across matrix
+#' @param Sobs Observed S,as a space-down, time-across matrix
+#' @param k600flag binary flag for model ran: 0 for KO2, 1 for k600
 #' @export
-estimate_logk600sd <- function(Wobs, Sobs){
-  Wobs[Wobs <= 0] <- NA
+estimate_logksd <- function(k600flag, Sobs){
   Sobs[Sobs <=0] <- NA
 
-  #Mark-style approach
-  ksd <- rep(1.023, ncol(Wobs))
+  ksd <- ifelse(k600flag == 1, rep(1.023, ncol(Wobs)), rep(0.77, ncol(Wobs)))
 }
 
+#' Estimate k lowerbound prior using biker data
+#'
+#' @param k600flag binary flag for model ran: 0 for KO2, 1 for k600
+#' @export
+estimate_lowerboundlogk <- function(k600flag){
+  ksd <- ifelse(k600flag == 1, log(0.001), log(0.0001))
+}
+
+#' Estimate k upperbound prior using biker data
+#'
+#' @param k600flag binary flag for model ran: 0 for KO2, 1 for k600
+#' @export
+estimate_upperboundlogk <- function(k600flag){
+  ksd <- ifelse(k600flag == 1, log(500), log(60))
+}
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------
 #class 17 are 'big' riverrs

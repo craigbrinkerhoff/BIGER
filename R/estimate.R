@@ -56,7 +56,7 @@ biker_estimate <- function(bikerdata,
 
   if (is.null(pars)) {
     pars <- c("man_rhs", "logWSpart",
-              "logk600tn", "logk600nbar",
+              "logktn", "logknbar",
               "Sact", "dAact")
   }
 
@@ -67,7 +67,7 @@ biker_estimate <- function(bikerdata,
                   ...)
 
   #extract posterior means, sigmas, and CIs from full posterior approximation
-  k600post <- rstan::extract(fit, "logk600", permuted = FALSE) %>%
+  kpost <- rstan::extract(fit, "logk", permuted = FALSE) %>%
     reshape2::melt()
 
   if (CI <= 0 || CI >= 1)
@@ -80,7 +80,7 @@ biker_estimate <- function(bikerdata,
     chainExtract <- 1:nchains
   stopifnot(is.numeric(chainExtract))
 
-  k600stats <- k600post %>%
+  kstats <- kpost %>%
     dplyr::mutate(chains = gsub("^chain:", "", .data$chains)) %>%
     dplyr::filter(.data$chains %in% chainExtract) %>%
     dplyr::mutate(value = exp(.data$value)) %>%
@@ -90,12 +90,12 @@ biker_estimate <- function(bikerdata,
                      conf.high = quantile(.data$value, 1 - (alpha / 2)),
                      sigma = sd(.data$value)) %>%
     dplyr::rename(time = .data$parameters) %>%
-    dplyr::mutate(time = gsub("^logk600\\[", "", .data$time),
+    dplyr::mutate(time = gsub("^logk\\[", "", .data$time),
                   time = gsub("\\]$", "", .data$time),
                   time = as.numeric(.data$time)) %>%
     dplyr::arrange(.data$time)
 
-  k600stats
+  kstats
 }
 
 

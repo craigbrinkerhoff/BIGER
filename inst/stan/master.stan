@@ -92,6 +92,7 @@ data {
   // Options
   int<lower=0, upper=1> inc_m; // Include Manning? 0=no; 1=yes;
   int<lower=0, upper=1> meas_err; //0=no, 1=yes;
+  int<lower=0, upper=1> k600flag; //Run K600 or kO2 model? 0=KO2, 1 = k600
 
   // Dimensions
   int<lower=0> nx; // number of reaches
@@ -115,18 +116,18 @@ data {
   real upperbound_A0;
   real lowerbound_logn;
   real upperbound_logn;
-  real upperbound_logk600;
-  real lowerbound_logk600;
+  real upperbound_logk;
+  real lowerbound_logk;
 
   // *Known* likelihood parameters
   vector<lower=0>[nt] sigma_post[nx]; // Manning error standard deviation
 
   // Hyperparameters
-  vector[nt] logk600_hat; // prior mean on logF g/m2*dy
+  vector[nt] logk_hat; // prior mean on logF g/m2*dy
   real logA0_hat[nx]; //space-varying A0 prior m2
   real logn_hat[nx]; //space varying n prior m2
 
-  vector<lower=0>[nt] logk600_sd;
+  vector<lower=0>[nt] logk_sd;
   real<lower=0> logA0_sd[nx];
   real<lower=0> logn_sd[nx];
 }
@@ -165,7 +166,7 @@ transformed data {
 }
 
 parameters {
-  vector<lower=lowerbound_logk600,upper=upperbound_logk600>[nt] logk600;
+  vector<lower=lowerbound_logk,upper=upperbound_logk>[nt] logk;
   vector<lower=lowerbound_logn,upper=upperbound_logn>[nx] logn[inc_m]; //for reach-defined n
   vector<lower=lowerbound_A0,upper=upperbound_A0>[nx] A0[inc_m];
 
@@ -179,7 +180,7 @@ transformed parameters {
   vector[ntot_man] man_lhs[inc_m]; // LHS for Manning likelihood
   vector[ntot_man] logA_man[inc_m]; // log area for Manning's equation
   vector[ntot_man] logN_man[inc_m]; //log Manning's n for Manning's equation
-  vector[ntot_man] logk600_man[inc_m]; // location-repeated logk600
+  vector[ntot_man] logk_man[inc_m]; // location-repeated logk
   vector[ntot_man] man_rhs[inc_m]; // RHS for Manning likelihood
 
   // Manning params
@@ -187,16 +188,17 @@ transformed parameters {
     if (meas_err) { //Measurement error in slopes and heights
       logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
       logN_man[1] = ragged_col(logn[1], hasdat_man);
-      logk600_man[1] = ragged_row(logk600, hasdat_man);
+      logk_man[1] = ragged_row(logk, hasdat_man);
 
-//My model
+    if (k600flag) { //run k600 model, rather than Ko2 model
       man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
-      man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk600_man[1];
-
-//Wang kl20 model
- //     man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
-//      man_rhs[1] = logk600_man[1] - 0.5*logA_man[1];
-
+      man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
+    }
+    else {
+     //Wang kO2_20 model
+      man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
+      man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+    }
 //OLD MODEL
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
    //   if(mean(Wobsvec_man) < 10 && mean(Sact[1]) < 0.05){ //0-10m, S > 0.05
@@ -223,16 +225,18 @@ transformed parameters {
 
     else { //No measurement error in slopes and heights
       logN_man[1] = ragged_col(logn[1], hasdat_man);
-      logk600_man[1] = ragged_row(logk600, hasdat_man);
+      logk_man[1] = ragged_row(logk, hasdat_man);
       logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
 
-//My model
-      man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
-      man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk600_man[1];
-
-//Wang kl20 model
-   //   man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
-  //    man_rhs[1] = logk600_man[1] - 0.5*logA_man[1];
+      if (k600flag) { //run k600 model, rather than Ko2 model
+       man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
+       man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
+      }
+      else {
+      //Wang kO2_20 model
+       man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
+       man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+      }
 
 //OLD MODEL
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
@@ -265,7 +269,7 @@ model {
   if (inc_m) {
     A0[1] + dA_shift[1] ~ lognormal(logA0_hat, logA0_sd);
     logn[1] ~ normal(logn_hat, logn_sd);
-    logk600[1] ~ normal(logk600_hat, logk600_sd);
+    logk[1] ~ normal(logk_hat, logk_sd);
   }
 
   //likelihood

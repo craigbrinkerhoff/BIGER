@@ -15,6 +15,7 @@
 #' @param w Matrix (or data frame) of widths: time as columns, space as rows
 #' @param s Matrix of slopes: time as columns, space as rows
 #' @param dA Matrix of area above base area: time as columns, space as rows
+#' @param Kdesired binary flag for which k to estimate: 0 for KO2, 1 for k600
 #' @param max_xs Maximum number of cross-sections to allow in data. Used to reduce
 #'   sampling time. Defaults to 30.
 #' @param seed RNG seed to use for sampling cross-sections, if nx > max_xs.
@@ -23,6 +24,7 @@
 biker_data <- function(w,
                      s,
                      dA,
+                     Kdesired,
                      max_xs = 30L,
                      seed = NULL) {
 
@@ -34,7 +36,8 @@ biker_data <- function(w,
 
   datalist <- list(Wobs = w,
                 Sobs = s,
-                dAobs = dA)
+                dAobs = dA,
+                k600flag = Kdesired)
 
   datalist <- biker_check_args(datalist)
   datalist <- biker_check_nas(datalist)
@@ -145,12 +148,11 @@ biker_check_nas <- function(datalist) {
 #' @useDynLib BIKER, .registration = TRUE
 #' @param bikerdata An object of class bikerdata, as returned by \code{biker_data}
 #' @param ... Optional manually set parameters. Unquoted expressions are allowed,
-#'   e.g. \code{logk600_sd = cv2sigma(0.8)}. Additionally, any variables present in
-#'   \code{bikerdata} may be referenced, e.g. \code{lowerbound_logk600 = log(mean(Wobs)) + log(5)}
+#'   e.g. \code{logk_sd = cv2sigma(0.8)}. Additionally, any variables present in
+#'   \code{bikerdata} may be referenced, e.g. \code{lowerbound_logk = log(mean(Wobs)) + log(5)}
 #' @export
-
 biker_priors <- function(bikerdata,
-                       ...) {
+                        ...) {
   force(bikerdata)
   paramset <- prior_settings("paramnames")
 
@@ -161,8 +163,8 @@ biker_priors <- function(bikerdata,
   quoparams <- myparams()[-1] # first one is parameter set
   params <- lapply(quoparams, rlang::eval_tidy, data = bikerdata)
 
-  if (!length(params[["logk600_sd"]]) == bikerdata$nt)
-    params$logk600_sd <- rep(params$logk600_sd, length.out = bikerdata$nt)
+  if (!length(params[["logk_sd"]]) == bikerdata$nt)
+    params$logk6_sd <- rep(params$logk_sd, length.out = bikerdata$nt)
 
   if (!identical(dim(params[["sigma_post"]]),
                  as.integer(c(bikerdata$nx, bikerdata$nt)))) {
@@ -176,9 +178,9 @@ biker_priors <- function(bikerdata,
   sigma_paramset <- params[sigma_paramset]
 
   #total priors needed to run geoBAM
-  biker_paramset <- c("lowerbound_logk600", "upperbound_logk600", "lowerbound_A0",
+  biker_paramset <- c("lowerbound_logk", "upperbound_logk", "lowerbound_A0",
                       "upperbound_A0", "lowerbound_logn", "upperbound_logn",
-                      "logA0_hat", "logn_hat","logk600_hat", "logA0_sd", "logn_sd", "logk600_sd")
+                      "logA0_hat", "logn_hat","logk_hat", "logA0_sd", "logn_sd", "logk_sd")
   bikerparams <- params[biker_paramset]
 
   riverType <- params[c("River_Type")]
