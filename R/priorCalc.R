@@ -14,7 +14,7 @@ estimate_logk600 <- function(Wobs, Sobs){
 
   #Mark-style approach
   colSobs <- colMeans(log(Sobs), na.rm=T)
-  khat <- ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
+  khat <- 3.63383 + 0.41124*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
 }
 
 #' Estimate k600 sd prior using biker data
