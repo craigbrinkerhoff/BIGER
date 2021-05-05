@@ -195,7 +195,7 @@ transformed parameters {
 
 //Wang kl20 model
       man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
-      man_rhs[1] = log(logk600_man[1]) - 0.5*logA_man[1];
+      man_rhs[1] = logk600_man[1] - 0.5*logA_man[1];
 
 //OLD MODEL
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
@@ -232,7 +232,7 @@ transformed parameters {
 
 //Wang kl20 model
       man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
-      man_rhs[1] = log(logk600_man[1]) - 0.5*logA_man[1];
+      man_rhs[1] = logk600_man[1] - 0.5*logA_man[1];
 
 //OLD MODEL
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
