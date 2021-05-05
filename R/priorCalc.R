@@ -4,43 +4,47 @@
 
 #k prior calculations--------------------------------------------------------------------------------------------------
 
-#' Estimate k_hat using biker data
+#' Estimate k_hat using biker data for ko2 model
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
-#' @param k600flag binary flag for model ran: 0 for KO2, 1 for k600
 #' @export
-estimate_logk <- function(k600flag, Sobs){
+estimate_logk_ko2 <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
   colSobs <- colMeans(log(Sobs), na.rm=T)
-  khat <- ifelse(k600flag == 1, 3.63383 + 0.41124*colSobs, 3.3492 + 0.3661*colSobs) #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
+  khat <- 3.3492 + 0.3661*colSobs
 }
 
-#' Estimate k sd prior using biker data
+#' Estimate k_hat using biker data for k600 model
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
-#' @param k600flag binary flag for model ran: 0 for KO2, 1 for k600
 #' @export
-estimate_logksd <- function(k600flag, Sobs){
+estimate_logk_k600 <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  ksd <- ifelse(k600flag == 1, rep(1.023, ncol(Wobs)), rep(0.77, ncol(Wobs)))
+  colSobs <- colMeans(log(Sobs), na.rm=T)
+  khat <- 3.63383 + 0.41124*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
 }
 
-#' Estimate k lowerbound prior using biker data
+
+#' Estimate k sd prior using biker data for ko2 model
 #'
-#' @param k600flag binary flag for model ran: 0 for KO2, 1 for k600
+#' @param Sobs Observed S,as a space-down, time-across matrix
 #' @export
-estimate_lowerboundlogk <- function(k600flag){
-  ksd <- ifelse(k600flag == 1, log(0.001), log(0.0001))
+estimate_logksd_ko2 <- function(Sobs){
+  Sobs[Sobs <=0] <- NA
+
+  ksd <- rep(0.77, ncol(Wobs))
 }
 
-#' Estimate k upperbound prior using biker data
+#' Estimate k sd prior using biker data for k600 model
 #'
-#' @param k600flag binary flag for model ran: 0 for KO2, 1 for k600
+#' @param Sobs Observed S,as a space-down, time-across matrix
 #' @export
-estimate_upperboundlogk <- function(k600flag){
-  ksd <- ifelse(k600flag == 1, log(500), log(60))
+estimate_logksd_k600 <- function(Sobs){
+  Sobs[Sobs <=0] <- NA
+
+  ksd <- rep(1.023, ncol(Wobs))
 }
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------

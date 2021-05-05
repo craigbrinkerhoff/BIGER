@@ -144,17 +144,16 @@ biker_check_nas <- function(datalist) {
 #'
 #' @useDynLib BIKER, .registration = TRUE
 #' @param bikerdata An object of class bikerdata, as returned by \code{biker_data}
-#' @param Kdesired binary flag for which k to estimate: 0 for KO2, 1 for k600
+#' @param Kmodel Which k to estimate: 'ko2' for KO2, 'k600' for k600
 #' @param ... Optional manually set parameters. Unquoted expressions are allowed,
 #'   e.g. \code{logk_sd = cv2sigma(0.8)}. Additionally, any variables present in
 #'   \code{bikerdata} may be referenced, e.g. \code{lowerbound_logk = log(mean(Wobs)) + log(5)}
 #' @export
 biker_priors <- function(bikerdata,
-                         Kdesired,
+                         Kmodel = 'ko2',
                         ...) {
   force(bikerdata)
-  force(Kdesired)
-  paramset <- prior_settings("paramnames")
+  paramset <- prior_settings_ko2("paramnames")
 
   myparams0 <- rlang::quos(..., .named = TRUE)
   myparams <- do.call(settings::clone_and_merge,
@@ -162,6 +161,17 @@ biker_priors <- function(bikerdata,
 
   quoparams <- myparams()[-1] # first one is parameter set
   params <- lapply(quoparams, rlang::eval_tidy, data = bikerdata)
+
+  if (Kmodel == 'k600') { #if set to run the k600 model, recalcuate prior hyperparameters
+    paramset <- prior_settings_k600("paramnames")
+
+    myparams0 <- rlang::quos(..., .named = TRUE)
+    myparams <- do.call(settings::clone_and_merge,
+                        args = c(list(options = prior_settings), myparams0))
+
+    quoparams <- myparams()[-1] # first one is parameter set
+    params <- lapply(quoparams, rlang::eval_tidy, data = bikerdata)
+  }
 
   if (!length(params[["logk_sd"]]) == bikerdata$nt)
     params$logk6_sd <- rep(params$logk_sd, length.out = bikerdata$nt)
@@ -185,7 +195,7 @@ biker_priors <- function(bikerdata,
 
   riverType <- params[c("River_Type")]
 
-  out <- list( 'river_types'=riverType, 'river_type_priors'=bikerparams, 'sigma_model'=sigma_paramset)
+  out <- list( 'river_types'=riverType, 'river_type_priors'=bikerparams, 'sigma_model'=sigma_paramset, 'Kmodel'=Kmodel)
   out <- structure(out,
                    class = c("bikerpriors"))
   out
