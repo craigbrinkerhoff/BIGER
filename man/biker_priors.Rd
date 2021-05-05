@@ -10,8 +10,8 @@ biker_priors(bikerdata, ...)
 \item{bikerdata}{An object of class bikerdata, as returned by \code{biker_data}}
 
 \item{...}{Optional manually set parameters. Unquoted expressions are allowed,
-e.g. \code{logk600_sd = cv2sigma(0.8)}. Additionally, any variables present in
-\code{bikerdata} may be referenced, e.g. \code{lowerbound_logk600 = log(mean(Wobs)) + log(5)}}
+e.g. \code{logk_sd = cv2sigma(0.8)}. Additionally, any variables present in
+\code{bikerdata} may be referenced, e.g. \code{lowerbound_logk = log(mean(Wobs)) + log(5)}}
 }
 \description{
 Produces a bikerpriors object that can be passed to biker_estimate function
