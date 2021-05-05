@@ -15,7 +15,6 @@
 #' @param w Matrix (or data frame) of widths: time as columns, space as rows
 #' @param s Matrix of slopes: time as columns, space as rows
 #' @param dA Matrix of area above base area: time as columns, space as rows
-#' @param Kdesired binary flag for which k to estimate: 0 for KO2, 1 for k600
 #' @param max_xs Maximum number of cross-sections to allow in data. Used to reduce
 #'   sampling time. Defaults to 30.
 #' @param seed RNG seed to use for sampling cross-sections, if nx > max_xs.
@@ -24,7 +23,6 @@
 biker_data <- function(w,
                      s,
                      dA,
-                     Kdesired,
                      max_xs = 30L,
                      seed = NULL) {
 
@@ -147,13 +145,16 @@ biker_check_nas <- function(datalist) {
 #'
 #' @useDynLib BIKER, .registration = TRUE
 #' @param bikerdata An object of class bikerdata, as returned by \code{biker_data}
+#' @param Kdesired binary flag for which k to estimate: 0 for KO2, 1 for k600
 #' @param ... Optional manually set parameters. Unquoted expressions are allowed,
 #'   e.g. \code{logk_sd = cv2sigma(0.8)}. Additionally, any variables present in
 #'   \code{bikerdata} may be referenced, e.g. \code{lowerbound_logk = log(mean(Wobs)) + log(5)}
 #' @export
 biker_priors <- function(bikerdata,
+                         Kdesired,
                         ...) {
   force(bikerdata)
+  force(Kdesired)
   paramset <- prior_settings("paramnames")
 
   myparams0 <- rlang::quos(..., .named = TRUE)
