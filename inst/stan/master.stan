@@ -189,8 +189,8 @@ transformed parameters {
       logN_man[1] = ragged_col(logn[1], hasdat_man);
       logk600_man[1] = ragged_row(logk600, hasdat_man);
 
-        man_lhs[1] = 0.4386267*logWobs_man - 0.98691*log(Sact[1]) - log(110.4762) - 0.657940*log(9.8);
-        man_rhs[1] = 0.4386267*(logA_man[1]) - 0.657940*logN_man[1] - logk600_man[1];
+        man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
+        man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk600_man[1];
 
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
    //   if(mean(Wobsvec_man) < 10 && mean(Sact[1]) < 0.05){ //0-10m, S > 0.05
@@ -220,8 +220,8 @@ transformed parameters {
       logk600_man[1] = ragged_row(logk600, hasdat_man);
       logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
 
-      man_lhs[1] = 0.4386267*logWobs_man - 0.98691*logSobs_man[1] - log(110.4762) - 0.657940*log(9.8);
-      man_rhs[1] = 0.4386267*(logA_man[1]) - 0.657940*logN_man[1] - logk600_man[1];
+      man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man[1] - log(85.10025) - 0.59957*log(9.8);
+      man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk600_man[1];
 
       //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
   //    if(mean(Wobsvec_man) < 10 && mean(Sobsvec_man) < 0.05){ //0-10m, S > 0.05
