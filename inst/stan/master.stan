@@ -199,28 +199,6 @@ transformed parameters {
       man_lhs[1] = log(56.94474) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
       man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
     }
-//OLD MODEL
-      //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
-   //   if(mean(Wobsvec_man) < 10 && mean(Sact[1]) < 0.05){ //0-10m, S > 0.05
-  //      man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*log(Sact[1]) - log(111.58121) - 0.6488131*log(9.8);
-//        man_rhs[1] = 0.4325421*(logA_man[1]) - 0.6488131*logN_man[1] - logk600_man[1];
-  //    }
-  //    if(mean(Wobsvec_man) < 10 && mean(Sact[1]) >= 0.05){ //0-10m, S < 0.05
-  //      man_lhs[1] = 0.8773377*logWobs_man - 1.97401*log(Sact[1]) - log(792.63149) - 1.3160065*log(9.8);
-  //      man_rhs[1] = 0.8773377*(logA_man[1]) - 1.3160065*logN_man[1] - logk600_man[1];
-  //    }
-  //    if(mean(Wobsvec_man) < 50 && mean(Wobsvec_man) >= 10){ //10-50m
-  //      man_lhs[1] = 0.4416236*logWobs_man - 0.9936531*log(Sact[1]) - log(109.04977) - 0.6624354*log(9.8);
-  //      man_rhs[1] = 0.4416236*(logA_man[1]) - 0.6624354*logN_man[1] - logk600_man[1];
-  //    }
-  //    if(mean(Wobsvec_man) < 100 && mean(Wobsvec_man) >= 50){ //50-100m
-  //      man_lhs[1] = 0.2910743*logWobs_man - 0.6549171*log(Sact[1]) - log(31.84344) - 0.4366114*log(9.8);
-  //      man_rhs[1] = 0.2910743*(logA_man[1]) - 0.4366114*logN_man[1] - logk600_man[1];
-  //    }
-  //    if(mean(Wobsvec_man) >= 100){ //100+m
-  //      man_lhs[1] = 0.1816556*logWobs_man - 0.4087251*log(Sact[1]) - log(14.16939) - 0.2724834*log(9.8);
-  //      man_rhs[1] = 0.1816556*(logA_man[1]) - 0.2724834*logN_man[1] - logk600_man[1];
-  //    }
     }
 
     else { //No measurement error in slopes and heights
@@ -237,29 +215,6 @@ transformed parameters {
        man_lhs[1] = log(56.94474) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
        man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
       }
-
-//OLD MODEL
-      //generate 'data' term (man_lhs) and 'parameter term ('man_rhs')
-  //    if(mean(Wobsvec_man) < 10 && mean(Sobsvec_man) < 0.05){ //0-10m, S > 0.05
-  //      man_lhs[1] = 0.4325421*logWobs_man - 0.9732197*logSobs_man - log(111.58121) - 0.6488131*log(9.8);
-  //      man_rhs[1] = 0.4325421*(logA_man[1]) - 0.6488131*logN_man[1] - logk600_man[1];
-  //    }
-  //    if(mean(Wobsvec_man) < 10 && mean(Sobsvec_man) >= 0.05){ //0-10m, S < 0.05
-  //      man_lhs[1] = 0.8773377*logWobs_man - 1.97401*logSobs_man - log(792.63149) - 1.3160065*log(9.8);
-  //      man_rhs[1] = 0.8773377*(logA_man[1]) - 1.3160065*logN_man[1] - logk600_man[1];
-  //    }
-  //    if(mean(Wobsvec_man) < 50 && mean(Wobsvec_man) >= 10){ //10-50m
-  //      man_lhs[1] = 0.4416236*logWobs_man - 0.9936531*logSobs_man - log(109.04977) - 0.6624354*log(9.8);
-  //      man_rhs[1] = 0.4416236*(logA_man[1]) - 0.6624354*logN_man[1] - logk600_man[1];
-  //    }
-  //    if(mean(Wobsvec_man) < 100 && mean(Wobsvec_man) >= 50){ //50-100m
-  //      man_lhs[1] = 0.2910743*logWobs_man - 0.6549171*logSobs_man - log(31.84344) - 0.4366114*log(9.8);
-  //      man_rhs[1] = 0.2910743*(logA_man[1]) - 0.4366114*logN_man[1] - logk600_man[1];
-  //    }
-  //    if(mean(Wobsvec_man) >= 100){ //100+m
-  //      man_lhs[1] = 0.1816556*logWobs_man - 0.4087251*logSobs_man - log(14.16939) - 0.2724834*log(9.8);
-  //      man_rhs[1] = 0.1816556*(logA_man[1]) - 0.2724834*logN_man[1] - logk600_man[1];
-  //    }
     }
   }
 }
