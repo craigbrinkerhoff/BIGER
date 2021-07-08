@@ -195,8 +195,8 @@ transformed parameters {
       man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
     }
     else {
-     //Wang kO2_20 model
-      man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
+     //Brinkerhoff k600~Ustar model
+      man_lhs[1] = log(56.94474) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
       man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
     }
 //OLD MODEL
@@ -233,8 +233,8 @@ transformed parameters {
        man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
       }
       else {
-      //Wang kO2_20 model
-       man_lhs[1] = log(48) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
+      //Brinkerhoff k600~Ustar model
+       man_lhs[1] = log(56.94474) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
        man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
       }
 
@@ -267,7 +267,7 @@ transformed parameters {
 model {
   // Priors
   if (inc_m) {
-    A0[1] + dA_shift[1] ~ lognormal(exp(logA0_hat), exp(logA0_sd));
+    A0[1] + dA_shift[1] ~ lognormal(logA0_hat, logA0_sd);
     logn[1] ~ normal(logn_hat, logn_sd);
     logk[1] ~ normal(logk_hat, logk_sd);
   }
