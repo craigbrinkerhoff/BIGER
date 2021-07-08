@@ -267,7 +267,7 @@ transformed parameters {
 model {
   // Priors
   if (inc_m) {
-    A0[1] + dA_shift[1] ~ lognormal(logA0_hat, logA0_sd);
+    A0[1] + dA_shift[1] ~ lognormal(exp(logA0_hat), exp(logA0_sd));
     logn[1] ~ normal(logn_hat, logn_sd);
     logk[1] ~ normal(logk_hat, logk_sd);
   }
