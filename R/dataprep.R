@@ -155,7 +155,7 @@ biker_priors <- function(bikerdata,
 
   myparams0 <- rlang::quos(..., .named = TRUE)
   myparams <- do.call(settings::clone_and_merge,
-                      args = c(list(options = prior_settings_ko2), myparams0))
+                      args = c(list(options = prior_settings), myparams0))
 
   quoparams <- myparams()[-1] # first one is parameter set
   params <- lapply(quoparams, rlang::eval_tidy, data = bikerdata)
