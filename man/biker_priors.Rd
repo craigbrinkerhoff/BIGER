@@ -4,12 +4,10 @@
 \alias{biker_priors}
 \title{Establish prior hyperparameters for BIKER estimation}
 \usage{
-biker_priors(bikerdata, Kmodel = "ko2", ...)
+biker_priors(bikerdata, ...)
 }
 \arguments{
 \item{bikerdata}{An object of class bikerdata, as returned by \code{biker_data}}
-
-\item{Kmodel}{Which k to estimate: 'ko2' for KO2, 'k600' for k600}
 
 \item{...}{Optional manually set parameters. Unquoted expressions are allowed,
 e.g. \code{logk_sd = cv2sigma(0.8)}. Additionally, any variables present in

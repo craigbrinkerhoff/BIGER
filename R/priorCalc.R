@@ -7,7 +7,7 @@
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
 #' @export
-estimate_logk_k600 <- function(Sobs){
+estimate_logk <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
   colSobs <- colMeans(log(Sobs), na.rm=T)
@@ -19,33 +19,10 @@ estimate_logk_k600 <- function(Sobs){
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
 #' @export
-estimate_logksd_k600 <- function(Sobs){
+estimate_logksd <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
   ksd <- rep(3.841, ncol(Sobs)) #standard model error of k600=beta*slope model fit to Ulseth data
-}
-
-########################
-#my function fit to the Raymond data SHOULD PROBABLY DELETE
-########################
-#' Estimate k_hat using biker data for ko2 model
-#'
-#' @param Sobs Observed S,as a space-down, time-across matrix
-#' @export
-estimate_logk_ko2 <- function(Sobs){ #my function fit to the Raymond data SHOULD PROBABLY DELETE
-  Sobs[Sobs <=0] <- NA
-
-  colSobs <- colMeans(log(Sobs), na.rm=T)
-  khat <- 3.3492 + 0.3661*colSobs
-}
-#' Estimate k sd prior using biker data for ko2 model
-#'
-#' @param Sobs Observed S,as a space-down, time-across matrix
-#' @export
-estimate_logksd_ko2 <- function(Sobs){
-  Sobs[Sobs <=0] <- NA
-
-  ksd <- rep(0.77, ncol(Sobs))
 }
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------

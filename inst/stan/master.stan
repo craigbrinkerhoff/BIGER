@@ -92,7 +92,6 @@ data {
   // Options
   int<lower=0, upper=1> inc_m; // Include Manning? 0=no; 1=yes;
   int<lower=0, upper=1> meas_err; //0=no, 1=yes;
-  int<lower=0, upper=1> k600flag; //Run K600 or kO2 model? 0=KO2, 1 = k600
 
   // Dimensions
   int<lower=0> nx; // number of reaches
@@ -109,6 +108,7 @@ data {
   vector[nx] dA_shift; // adjustment from min to median
 
   real<lower=0> Serr_sd; //measurement error slopes
+  real<lower=0> Werr_sd;
   real<lower=0> dAerr_sd; //measurement error slopes
 
   // Hard bounds on parameters
@@ -171,6 +171,7 @@ parameters {
   vector<lower=lowerbound_A0,upper=upperbound_A0>[nx] A0[inc_m];
 
   vector<lower=0>[ntot_man] Sact[meas_err * inc_m];
+  vector<lower=0>[ntot_w] Wact[meas_err * inc_m];
   vector[ntot_man] dApos_act[meas_err * inc_m];
 }
 
@@ -190,15 +191,12 @@ transformed parameters {
       logN_man[1] = ragged_col(logn[1], hasdat_man);
       logk_man[1] = ragged_row(logk, hasdat_man);
 
-    if (k600flag) { //run k600 model, rather than Ko2 model
-      man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
-      man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
-    }
-    else {
+      //man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
+      //man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
+
      //Brinkerhoff k600~Ustar model
-      man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
+      man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*log(Wact[1]);
       man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
-    }
     }
 
     else { //No measurement error in slopes and heights
@@ -206,15 +204,12 @@ transformed parameters {
       logk_man[1] = ragged_row(logk, hasdat_man);
       logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
 
-      if (k600flag) { //run k600 model, rather than Ko2 model
-       man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
-       man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
-      }
-      else {
+    //   man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
+    //   man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
+
       //Brinkerhoff k600~Ustar model
        man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
        man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
-      }
     }
   }
 }
@@ -235,8 +230,11 @@ model {
   //latent variables for measurement error
   if (meas_err){
     if (inc_m) {
+      Wact[1] ~ normal(Wobsvec_man, Werr_sd); // W meas err
       Sact[1] ~ normal(Sobsvec_man, Serr_sd); // S meas err
       dApos_act[1] ~ normal(dApos_obs, dAerr_sd); // dA meas err
+
+      target += -log(Wact[1]); // Jacobian adjustments
       target += -log(Sact[1]);
     }
   }
