@@ -12,7 +12,7 @@ estimate_logk_k600 <- function(Sobs){
 
   colSobs <- colMeans(log(Sobs), na.rm=T)
  # khat <- 5.0941 + 0.6417*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
-  khat <- 1144.6*colMeans(Sobs, na.rm=T) #r2 0.52 using ulseth data where Rh=H
+  khat <- log(1144.6*colMeans(Sobs, na.rm=T)) #r2 0.52 using ulseth data where Rh=H
 }
 
 #' Estimate k sd prior using biker data for k600 model
