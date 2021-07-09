@@ -7,21 +7,22 @@
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
 #' @export
-estimate_logk_k600 <- function(Sobs){ #r2 0.49 using ulseth data
+estimate_logk_k600 <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
   colSobs <- colMeans(log(Sobs), na.rm=T)
-  khat <- 5.0941 + 0.6417*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
+ # khat <- 5.0941 + 0.6417*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
+  khat <- 1144.6*colMeans(Sobs, na.rm=T) #r2 0.52 using ulseth data where Rh=H
 }
 
 #' Estimate k sd prior using biker data for k600 model
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
 #' @export
-estimate_logksd_k600 <- function(Sobs){ #standard model error of k600=aSLOPE^b model fit to Ulseth data
+estimate_logksd_k600 <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  ksd <- rep(1.091, ncol(Sobs))
+  ksd <- rep(3.841, ncol(Sobs)) #standard model error of k600=beta*slope model fit to Ulseth data
 }
 
 ########################

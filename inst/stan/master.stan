@@ -196,7 +196,7 @@ transformed parameters {
     }
     else {
      //Brinkerhoff k600~Ustar model
-      man_lhs[1] = log(56.94474) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
+      man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*logWobs_man;
       man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
     }
     }
@@ -212,7 +212,7 @@ transformed parameters {
       }
       else {
       //Brinkerhoff k600~Ustar model
-       man_lhs[1] = log(56.94474) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
+       man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
        man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
       }
     }
