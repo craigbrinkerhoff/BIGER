@@ -182,7 +182,7 @@ biker_priors <- function(bikerdata,
 
   riverType <- params[c("River_Type")]
 
-  out <- list( 'river_types'=riverType, 'river_type_priors'=bikerparams, 'sigma_model'=sigma_paramset, 'Kmodel'=Kmodel)
+  out <- list( 'river_types'=riverType, 'river_type_priors'=bikerparams, 'sigma_model'=sigma_paramset)
   out <- structure(out,
                    class = c("bikerpriors"))
   out
