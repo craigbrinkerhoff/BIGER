@@ -171,7 +171,7 @@ biker_priors <- function(bikerdata,
   }
 
   #just priors the user wants to see
-  sigma_paramset <- c('sigma_post', 'Serr_sd', 'dAerr_sd')
+  sigma_paramset <- c('sigma_post', 'Serr_sd', 'dAerr_sd', 'Werr_sd')
   sigma_paramset <- params[sigma_paramset]
 
   #total priors needed to run geoBAM
