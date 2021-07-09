@@ -46,13 +46,11 @@ biker_estimate <- function(bikerdata,
   stopifnot(is(bikerpriors, "bikerpriors"))
 
   #reformat priors to a single list for stan
-  model <- bikerpriors[[4]]
   bikerpriors <- c(bikerpriors[[2]], bikerpriors[[3]])
 
   bikerinputs <- compose_biker_inputs(bikerdata, bikerpriors)
   bikerinputs$inc_m <- 1
   bikerinputs$meas_err <- ifelse(meas_error == TRUE, 1, 0)
-  bikerinputs$k600flag <- ifelse(model == 'k600', 1, 0)
 
   stanfit <- stanmodels[["master"]]
 
