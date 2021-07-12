@@ -175,9 +175,8 @@ biker_priors <- function(bikerdata,
   sigma_paramset <- params[sigma_paramset]
 
   #total priors needed to run geoBAM
-  biker_paramset <- c("lowerbound_logk", "upperbound_logk", "lowerbound_A0",
-                      "upperbound_A0", "lowerbound_logn", "upperbound_logn",
-                      "logA0_hat", "logn_hat","logk_hat", "logA0_sd", "logn_sd", "logk_sd")
+  biker_paramset <- c("lowerbound_logk", "upperbound_logk", "lowerbound_A0","upperbound_A0",
+                      "logA0_hat","logk_hat", "logA0_sd", "logk_sd")
   bikerparams <- params[biker_paramset]
 
   riverType <- params[c("River_Type")]

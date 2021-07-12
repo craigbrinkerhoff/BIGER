@@ -6,11 +6,10 @@
 #' @param .__reset See \code{?settings::option_manager}
 #' @export
 prior_settings <- settings::options_manager(
-  paramnames = c("lowerbound_logk", "upperbound_logk", "lowerbound_A0",
-                 "upperbound_A0", "lowerbound_logn", "upperbound_logn",
+  paramnames = c("lowerbound_logk", "upperbound_logk", "lowerbound_A0", "upperbound_A0",
                  "sigma_post",
-                 "logA0_hat", "logn_hat", "logk_hat",
-                 "logA0_sd", "logn_sd", "logk_sd",
+                 "logA0_hat", "logk_hat",
+                 "logA0_sd", "logk_sd",
                  "River_Type",
                  "Serr_sd", 'dAerr_sd'),
 
@@ -20,20 +19,16 @@ prior_settings <- settings::options_manager(
 
   lowerbound_A0 = rlang::quo(estimate_lowerboundA0(Wobs)),
   upperbound_A0 = rlang::quo(estimate_upperboundA0(Wobs)),
-  lowerbound_logn = rlang::quo(estimate_lowerboundlogn(Wobs)),
-  upperbound_logn = rlang::quo(estimate_upperboundlogn(Wobs)),
 
   # *Known* likelihood parameters
   sigma_post = 1.12, #standard error of k~ustar model parameter
 
   # Hyperparameters via geoBAM & k prior
   logA0_hat = rlang::quo(estimate_logA0(Wobs)),
-  logn_hat = rlang::quo(estimate_logn(Sobs, Wobs)),
   logk_hat = rlang::quo(estimate_logk(Sobs)),
 
   #from geoBAM & k prior
   logA0_sd = rlang::quo(estimate_A0SD(Wobs)),
-  logn_sd = rlang::quo(estimate_lognSD(Wobs)),
   logk_sd = rlang::quo(estimate_logksd(Sobs)),
 
   #Classified river type

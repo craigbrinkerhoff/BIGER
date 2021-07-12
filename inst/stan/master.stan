@@ -114,8 +114,6 @@ data {
   // Hard bounds on parameters
   real lowerbound_A0; // These must be scalars, unfortunately.
   real upperbound_A0;
-  real lowerbound_logn;
-  real upperbound_logn;
   real upperbound_logk;
   real lowerbound_logk;
 
@@ -125,11 +123,9 @@ data {
   // Hyperparameters
   vector[nt] logk_hat; // prior mean on logF g/m2*dy
   real logA0_hat[nx]; //space-varying A0 prior m2
-  real logn_hat[nx]; //space varying n prior m2
 
   vector<lower=0>[nt] logk_sd;
   real<lower=0> logA0_sd[nx];
-  real<lower=0> logn_sd[nx];
 }
 
 
@@ -167,7 +163,6 @@ transformed data {
 
 parameters {
   vector<lower=lowerbound_logk,upper=upperbound_logk>[nt] logk;
-  vector<lower=lowerbound_logn,upper=upperbound_logn>[nx] logn[inc_m]; //for reach-defined n
   vector<lower=lowerbound_A0,upper=upperbound_A0>[nx] A0[inc_m];
 
   vector<lower=0>[ntot_man] Sact[meas_err * inc_m];
@@ -179,37 +174,40 @@ parameters {
 transformed parameters {
 
   vector[ntot_man] man_lhs[inc_m]; // LHS for Manning likelihood
-  vector[ntot_man] logA_man[inc_m]; // log area for Manning's equation
-  vector[ntot_man] logN_man[inc_m]; //log Manning's n for Manning's equation
-  vector[ntot_man] logk_man[inc_m]; // location-repeated logk
+ // vector[ntot_man] logA_man[inc_m]; // log area for Manning's equation
+//  vector[ntot_man] logk_man[inc_m]; // location-repeated logk
   vector[ntot_man] man_rhs[inc_m]; // RHS for Manning likelihood
 
   // Manning params
   if (inc_m) {
     if (meas_err) { //Measurement error in slopes and heights
-      logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
-      logN_man[1] = ragged_col(logn[1], hasdat_man);
-      logk_man[1] = ragged_row(logk, hasdat_man);
-
-      //man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
-      //man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
+   //   logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
+  //    logk_man[1] = ragged_row(logk, hasdat_man);
 
      //Brinkerhoff k600~Ustar model
-      man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*log(Wact[1]);
-      man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+  //    man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*log(Wact[1]);
+  //    man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+
+
+        //man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
+      //man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
     }
 
     else { //No measurement error in slopes and heights
-      logN_man[1] = ragged_col(logn[1], hasdat_man);
-      logk_man[1] = ragged_row(logk, hasdat_man);
-      logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
+   //   logk_man[1] = ragged_row(logk, hasdat_man);
+    //  logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
+
+      //Brinkerhoff k600~Ustar model
+    //   man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
+    //   man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
 
     //   man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
     //   man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
 
-      //Brinkerhoff k600~Ustar model
-       man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
-       man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+
+    //Brinkerhoff k600~Ustar model
+    man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
+    man_rhs[1] = ragged_row(logk, hasdat_man) - 0.5*log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
     }
   }
 }
@@ -218,7 +216,6 @@ model {
   // Priors
   if (inc_m) {
     A0[1] + dA_shift[1] ~ lognormal(logA0_hat, logA0_sd);
-    logn[1] ~ normal(logn_hat, logn_sd);
     logk[1] ~ normal(logk_hat, logk_sd);
   }
 
