@@ -174,19 +174,19 @@ parameters {
 transformed parameters {
 
   vector[ntot_man] man_lhs[inc_m]; // LHS for Manning likelihood
- // vector[ntot_man] logA_man[inc_m]; // log area for Manning's equation
-//  vector[ntot_man] logk_man[inc_m]; // location-repeated logk
+  vector[ntot_man] logA_man[inc_m]; // log area for Manning's equation
+  vector[ntot_man] logk_man[inc_m]; // location-repeated logk
   vector[ntot_man] man_rhs[inc_m]; // RHS for Manning likelihood
 
   // Manning params
   if (inc_m) {
     if (meas_err) { //Measurement error in slopes and heights
-   //   logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
-  //    logk_man[1] = ragged_row(logk, hasdat_man);
+      logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
+      logk_man[1] = ragged_row(logk, hasdat_man);
 
      //Brinkerhoff k600~Ustar model
-  //    man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*log(Wact[1]);
-  //    man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+      man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*log(Wact[1]);
+      man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
 
 
         //man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
@@ -194,20 +194,17 @@ transformed parameters {
     }
 
     else { //No measurement error in slopes and heights
-   //   logk_man[1] = ragged_row(logk, hasdat_man);
-    //  logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
+      logk_man[1] = ragged_row(logk, hasdat_man);
+      logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
 
       //Brinkerhoff k600~Ustar model
-    //   man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
-    //   man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+       man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
+       man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+
+
 
     //   man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
     //   man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
-
-
-    //Brinkerhoff k600~Ustar model
-    man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
-    man_rhs[1] = ragged_row(logk, hasdat_man) - 0.5*log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
     }
   }
 }
