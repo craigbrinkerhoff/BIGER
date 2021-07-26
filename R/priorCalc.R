@@ -10,7 +10,7 @@
 estimate_logk <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  colSobs <- colMeans(log(Sobs), na.rm=T)
+  colSobs <- colMeans(Sobs, na.rm=T)
  # khat <- 5.0941 + 0.6417*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
   khat <- log(56.0294*exp(-0.69945)*colSobs^0.29587) #r2 0.54 for ustar~slope relation using ulseth data where Rh=H. The 56.0294 is the parameter from k600~ustar model
 }
