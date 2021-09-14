@@ -1,10 +1,7 @@
 # BIKER
 "Bayesian Inference/Inversion of the K600 Evasion Rate"
 
-BIKER uses Bayesian inference to simultaneously estimate river channel size, roughness, and the normalized gas exchange velocity from some mass-conserved river reach. BIKER was developed specifically to ingest observations from the NASA/CNES/UKSA/CSA Surface Water and Ocean Topography (SWOT) mission, but can theoreitcally be used on any dataset of river width and water surface elevation measurements made along a set of mass-conserved river cross-sections.
-
-The academic manuscript associated with BIKER and its validation is in preperation. The code for developing and validing BIKER and writing the manuscript is available at https://github.com/craigbrinkerhoff/RSK600.
-
+BIKER enables estimation of the normalized riverine gas exchange velocity from measurements of river surface width and height/slope. It does so using Bayesian inference and a Hamiltonian Monte Carlo sampler to generate a posterior distribution for a gas exchange model. BIKER was developed in the context of the NASA/CNES/UKSA/CSA SWOT mission (https://swot.jpl.nasa.gov/mission/overview/). The academic manuscript associated with this model development and validation is in preperation. The code for developing and validing BIKER (as well as writing the manuscript in RMarkdown) is available at https://github.com/craigbrinkerhoff/RSK600.
 
 ## Installation
 ```
@@ -13,34 +10,32 @@ devtools::install_github("craigbrinkerhoff/BIKER", ref='main', force=TRUE)
 ```
 
 ## Getting started
-BIKER requires three inputs to the algorithm for some mass-conserved river reach: a matrix of river width measurements $W_{obs}$, a matrix of water surface elevation measurements $S_{obs}$, and a matrix of 'change in cross-sectional channel area' observations $dA_{obs}$. All three BIKER inputs must follow the standard hydrology discretization setup where spatial steps are row-wise and temporal steps are column-wise. $dA_{obs}$ can be estimated assuming a rectangular river channel using the following expression: $dA_{obs}\approx W_{obs}* \delta H_{obs}$ for water surface elevation $H_{obs}$.
+To run BIKER, the following workflow is ideal. Note that BIKER follows a standard hydrology setup for the discretization of the river observations along a mass-conserved river reach. This means that matrix rows represent spatial steps along the reach while matrix columns represent timesteps for these observations.
 
-BIKER requires the user to run three seperate functions in order to estimate $k_{600}$. First, you must gather all necessary data into a BIKER object that the sampling model can ingest. Then, you need to set values for your prior hyperparameters, and then you can "turn the Bayesian crank" to obtain $k_{600}$ estimates. See the code below for doing this.
+#### Inputs
+BIKER requires 3 inputs: <br>
+- $Wobs$: a matrix of water surface widths <br>
+- $Sobs$: a matrix of water surface slopes <br> 
+- $dAobs$: a matrix of 'change in cross-sectional channel areas'. This must be approximated by the user. We generally assume a rectangular river channel so that this can be calculated as the following: $Wobs*\delta Hobs$. $Hobs$ is the matrix of water-surface elevations.
+
+#### Run BIKER
+The following is the series of fuctions that need to be run (in this order) to use BIKER. Consult the help key in R to see examples. The below code will return the $k_{600}$ posterior mean and 95% confidence intervals (CIs) by default. The user can specify their CIs of choice in the biker_estimate function. Note that the 'meas_err' option should always be left to false as it is currently a work in progress and will produce erronous $k_{600}$ estimates.<br>
 
 ```
-#set up biker object for some mass conserved river reach
-data <- biker_data(w=W_obs, s=S_obs, dA=dA_obs)
-
-#Use internal functions to automatically assign hyperparameters. These can be overwritten manually too
-prior_hyperparameters <- biker_priors(data)
-
-#run BIKER
-k600_estimate <- biker_estimate(biker_data, prior_hyperparameters)
+reach_data <- biker_data(w=Wobs, s=Wobs, da=dAobs) #collect data into object the algorithm can read
+reach_priors <- biker_priors(reach_data) #estimate prior hyperparameters for Bayesian inference using just river width and slope
+k600_estimates <- biker_estimate(reach_data, reach_priors) #sample from joint posterior distribution to obtain estimates of k600
 ```
-This will return the $k_{600}$ posterior mean and 95% confidence intervals (CIs) by default. The user can specify their CIs of choice in the biker_estimate function. Note that the 'meas_err' option should always be left to false as it is currently a work in progress and will produce erronous $k_{600}$ estimates.
 
-Also note that to manually override the hyperparameter assignments, one simply has to specify the specific prior they want to override. All geomorphic priors are within the 'river_type_priors' sublist. For example, lets use the upperbound on Manning's n:
+#### Manually specifying prior hyperparameters
+Priors can also be overwritten manually if you so desire. This is done as following, for example, for the A0_hat prior. Here, I set the prior to 5000 m2 and repeat for every spatial step in the river reach (because A0 is defined per spatial step):
 ```
-prior_hyperparameters <- biker_priors(data)
-prior_hyperparameters$river_type_priors$upperbound_logn = -2
+reach_priors <- biker_priors(reach_data, logA0_hat = rep(5000, nrow(W_obs)))
+```
 
-#one can also change the upscaling model uncertainity as follows
-prior_hyperparameters$sigma_model$sigma_post = 0.25
-
-#for the full list of hyperparameters that can be changed, run this:
+If you want the full list of customizable prior hyperparameters, run the following:
+```
 prior_settings()
 ```
-One can also manually specify these within the biker_priors() function. Consult the help key in R to see examples. The 'cv2sigma()' function is included to do this if you want to specify sigmpa hyperparameters by the cofficient of variation cv.
 
-## Troubleshooting
-Use the help key in R to get function options and email cbrinkerhoff[at]umass[dot]edu for further help!
+Finally, the 'cv2sigma()' function is included to if you want to specify hyperparameters by the cofficient of variation. This is mostly useful for the sigma hyperparameters.
