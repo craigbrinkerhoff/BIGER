@@ -14,12 +14,12 @@ To run BIKER, the following workflow is ideal. Note that BIKER follows a standar
 
 #### Inputs
 BIKER requires 3 inputs: <br>
-- **Wobs**: a matrix of water surface widths <br>
-- **Sobs**: a matrix of water surface slopes <br> 
-- **dAobs**: a matrix of 'change in cross-sectional channel areas'. This must be approximated by the user. We generally assume a rectangular river channel so that this can be calculated as **Wobs** times the change in **Hobs** per timestep, where **Hobs** is the matrix of water-surface elevations.
+- *Wobs*: a matrix of water surface widths <br>
+- *Sobs*: a matrix of water surface slopes <br> 
+- *dAobs*: a matrix of 'change in cross-sectional channel areas'. This must be approximated by the user. We generally assume a rectangular river channel so that this can be calculated as *Wobs* times the change in *Hobs* per timestep, where *Hobs* is the matrix of water-surface elevations.
 
 #### Run BIKER
-The following is the series of fuctions that need to be run (in this order) to use BIKER. Consult the help key in R to see examples. The below code will return the **k600** posterior mean and 95% confidence intervals (CIs) by default. The user can specify their CIs of choice in the biker_estimate function. Note that the 'meas_err' option should always be left to false as it is currently a work in progress and will produce erronous **k600** estimates.<br>
+The following is the series of fuctions that need to be run (in this order) to use BIKER. Consult the help key in R to see examples. The below code will return the *k600* posterior mean and 95% confidence intervals (CIs) by default. The user can specify their CIs of choice in the biker_estimate function. Note that the 'meas_err' option should always be left to false as it is currently a work in progress and will produce erronous *k600* estimates.<br>
 
 ```
 reach_data <- biker_data(w=Wobs, s=Wobs, da=dAobs) #collect data into object the algorithm can read
