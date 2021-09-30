@@ -12,7 +12,8 @@ estimate_logk <- function(Sobs){
 
   colSobs <- colMeans(Sobs, na.rm=T)
  # khat <- 5.0941 + 0.6417*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
-  khat <- log(56.0294*exp(-0.69945)*colSobs^0.29587) #r2 0.54 for ustar~slope relation using ulseth data where Rh=H. The 56.0294 is the parameter from k600~ustar model
+  #khat <- log(56.0294*exp(-0.69945)*colSobs^0.29587) #r2 0.54 for ustar~slope relation using ulseth data where Rh=H. The 56.0294 is the parameter from k600~ustar model
+  khat <- log(35.5*(9.8*colSobs)^(9/16)) #r2: 0.60
 }
 
 #' Estimate k sd prior using biker data for k600 model
@@ -22,7 +23,8 @@ estimate_logk <- function(Sobs){
 estimate_logksd <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  ksd <- rep(1.160585, ncol(Sobs)) #propogated standard errors for k600~ustar model and ustar~slope model
+  #ksd <- rep(1.160585, ncol(Sobs)) #propogated standard errors for k600~ustar model and ustar~slope model
+  ksd <- rep(log(3.45), ncol(Sobs)) #standard error of logk_hat model trained on my dataset of field-measured k600
 }
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------

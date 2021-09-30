@@ -49,7 +49,7 @@ biker_estimate <- function(bikerdata,
   bikerpriors <- c(bikerpriors[[2]], bikerpriors[[3]])
 
   bikerinputs <- compose_biker_inputs(bikerdata, bikerpriors)
-  bikerinputs$inc_m <- 1
+  bikerinputs$inc <- 1
   bikerinputs$meas_err <- ifelse(meas_error == TRUE, 1, 0)
 
   stanfit <- stanmodels[["master"]]

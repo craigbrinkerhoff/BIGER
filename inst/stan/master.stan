@@ -1,4 +1,5 @@
-//Craig BEE stan model for remotely sensing gas transfer velocity
+//Craig BIKER stan model for remotely sensing gas transfer velocity
+//Fall 2021
 
 functions {
   // Conversion from array to vector takes place by row.
@@ -87,10 +88,11 @@ functions {
   }
 }
 
+//Setup data object
 data {
 
   // Options
-  int<lower=0, upper=1> inc_m; // Include Manning? 0=no; 1=yes;
+  int<lower=0, upper=1> inc; // Include Manning? 0=no; 1=yes;
   int<lower=0, upper=1> meas_err; //0=no, 1=yes;
 
   // Dimensions
@@ -128,8 +130,7 @@ data {
   real<lower=0> logA0_sd[nx];
 }
 
-
-
+//set up transformed parameters
 transformed data {
   // Transformed data are *vectors*, not arrays. This to allow ragged structure
 
@@ -161,36 +162,40 @@ transformed data {
   sigmavec_man = ragged_vec(sigma_post, hasdat_man);
 }
 
+//Set up surface-level parameters
 parameters {
   vector<lower=lowerbound_logk,upper=upperbound_logk>[nt] logk;
-  vector<lower=lowerbound_A0,upper=upperbound_A0>[nx] A0[inc_m];
+  vector<lower=lowerbound_A0,upper=upperbound_A0>[nx] A0[inc];
 
-  vector<lower=0>[ntot_man] Sact[meas_err * inc_m];
-  vector<lower=0>[ntot_w] Wact[meas_err * inc_m];
-  vector[ntot_man] dApos_act[meas_err * inc_m];
+  vector<lower=0>[ntot_man] Sact[meas_err * inc];
+  vector<lower=0>[ntot_w] Wact[meas_err * inc];
+  vector[ntot_man] dApos_act[meas_err * inc];
 }
 
-
+//Calculated transformed parameters
 transformed parameters {
 
-  vector[ntot_man] man_lhs[inc_m]; // LHS for Manning likelihood
-  vector[ntot_man] logA_man[inc_m]; // log area for Manning's equation
-  vector[ntot_man] logk_man[inc_m]; // location-repeated logk
-  vector[ntot_man] man_rhs[inc_m]; // RHS for Manning likelihood
+  vector[ntot_man] eq_lhs[inc]; // LHS for Manning likelihood
+  vector[ntot_man] logA_man[inc]; // log area for Manning's equation
+  vector[ntot_man] logk_man[inc]; // location-repeated logk
+  vector[ntot_man] eq_rhs[inc]; // RHS for Manning likelihood
 
-  // Manning params
-  if (inc_m) {
+  // Params
+  if (inc) {
     if (meas_err) { //Measurement error in slopes and heights
       logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
       logk_man[1] = ragged_row(logk, hasdat_man);
 
-     //Brinkerhoff k600~Ustar model
-      man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*log(Wact[1]);
-      man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+      //Brinkerhoff k600~Ustar model
+      // man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*log(Wact[1]);
+      //  man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
 
-
-        //man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
+      //man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
       //man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
+
+      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model'
+      eq_lhs[1] = log(76.4) + (0.5625)*log(9.8) + (0.5625)*log(Sact[1]) - (0.6875)*log(Wact[1]);
+      eq_rhs[1] = logk_man[1] - (0.6875)*logA_man[1];
     }
 
     else { //No measurement error in slopes and heights
@@ -198,32 +203,35 @@ transformed parameters {
       logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
 
       //Brinkerhoff k600~Ustar model
-       man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
-       man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+      // man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
+      // man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
 
+      //   man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
+      //   man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
 
-
-    //   man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
-    //   man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
+      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model'
+      eq_lhs[1] = log(76.4) + (0.5625)*log(9.8) + (0.5625)*logSobs_man - (0.6875)*logWobs_man;
+      eq_rhs[1] = logk_man[1] - (0.6875)*logA_man[1];
     }
   }
 }
 
+//Actual Bayesian inference model
 model {
   // Priors
-  if (inc_m) {
+  if (inc) {
     A0[1] + dA_shift[1] ~ lognormal(logA0_hat, logA0_sd);
     logk[1] ~ normal(logk_hat, logk_sd);
   }
 
-  //likelihood
-  if (inc_m){
-    man_lhs[1] ~ normal(man_rhs[1], sigmavec_man);
+  //likelihood/sampling model
+  if (inc){
+    eq_lhs[1] ~ normal(eq_rhs[1], sigmavec_man);
   }
 
   //latent variables for measurement error
   if (meas_err){
-    if (inc_m) {
+    if (inc) {
       Wact[1] ~ normal(Wobsvec_man, Werr_sd); // W meas err
       Sact[1] ~ normal(Sobsvec_man, Serr_sd); // S meas err
       dApos_act[1] ~ normal(dApos_obs, dAerr_sd); // dA meas err
