@@ -25,6 +25,7 @@
 #'   a default parameter set is returned.
 #' @param include (passed to \code{rstan::sampling()}) Defaults to FALSE, which
 #'   excludes parameters specified in \code{pars} from the returned model.
+#' @param suppressOutput (passed to \code{rstan::sampling()}) Determines whether stan sampling updates are printed to the console. Defaults to 1. Any value <= 0 will suppress output.
 #' @param ... Other arguments passed to rstan::sampling() for customizing the
 #'   Monte Carlo sampler
 #' @import rstan
@@ -39,6 +40,7 @@ biker_estimate <- function(bikerdata,
                          chainExtract = 'all',
                          pars = NULL,
                          include = FALSE,
+                         suppressOutput = 1,
                          ...) {
   stopifnot(is(bikerdata, "bikerdata"))
   if (is.null(bikerpriors))
@@ -63,7 +65,7 @@ biker_estimate <- function(bikerdata,
   #generate stanfit object (i.e. sample from the posterior using stan)
   fit <- sampling(stanfit, data = bikerinputs,
                   cores = cores, chains = chains, iter = iter,
-                  pars = pars, include = include,
+                  pars = pars, include = include, refresh = suppressOutput,
                   ...)
 
   #extract posterior means, sigmas, and CIs from full posterior approximation

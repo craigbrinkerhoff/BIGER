@@ -15,6 +15,7 @@ biker_estimate(
   chainExtract = "all",
   pars = NULL,
   include = FALSE,
+  suppressOutput = 1,
   ...
 )
 }
@@ -42,7 +43,8 @@ parameters of interest to be returned in the stanfit object. If not specified,
 a default parameter set is returned.}
 
 \item{include}{(passed to \code{rstan::sampling()}) Defaults to FALSE, which
-excludes parameters specified in \code{pars} from the returned model.}
+excludes parameters specified in \code{pars} from the returned model.
+@param suppressOutput (passed to \code{rstan::sampling()}) Determines whether stan sampling updates are printed to the console. Defaults to 1. Any value <= 0 will suppress output.}
 
 \item{...}{Other arguments passed to rstan::sampling() for customizing the
 Monte Carlo sampler}
