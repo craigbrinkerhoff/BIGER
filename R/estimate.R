@@ -62,10 +62,13 @@ biker_estimate <- function(bikerdata,
               "Sact", "dAact")
   }
 
+  messageFlag <- ifelse(suppressOutput <= 0, FALSE, TRUE)
+
   #generate stanfit object (i.e. sample from the posterior using stan)
   fit <- sampling(stanfit, data = bikerinputs,
                   cores = cores, chains = chains, iter = iter,
-                  pars = pars, include = include, refresh = suppressOutput,
+                  pars = pars, include = include,
+                  refresh = suppressOutput, show_messages = messageFlag,
                   ...)
 
   #extract posterior means, sigmas, and CIs from full posterior approximation
