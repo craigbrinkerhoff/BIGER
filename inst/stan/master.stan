@@ -101,7 +101,7 @@ data {
   int<lower=0> ntot_man; // total number of non-missing Manning observations
 
   // // Missing data
-  int<lower=0,upper=1> hasdat_man[nx, nt]; // matrix of 0 (missing), 1 (not missing)
+  int<lower=0,upper=1> hasdat[nx, nt]; // matrix of 0 (missing), 1 (not missing)
 
   // *Actual* data
   vector[nt] Wobs[nx]; // measured widths, including placeholders for missing
@@ -118,6 +118,8 @@ data {
   real upperbound_A0;
   real upperbound_logk;
   real lowerbound_logk;
+  real upperbound_logn;
+  real lowerbound_logn;
 
   // *Known* likelihood parameters
   vector<lower=0>[nt] sigma_post[nx]; // Manning error standard deviation
@@ -125,9 +127,11 @@ data {
   // Hyperparameters
   vector[nt] logk_hat; // prior mean on logF g/m2*dy
   real logA0_hat[nx]; //space-varying A0 prior m2
+  real logn_hat[nx]; //space-varying n prior
 
   vector<lower=0>[nt] logk_sd;
   real<lower=0> logA0_sd[nx];
+  real<lower=0> logn_sd[nx];
 }
 
 //set up transformed parameters
@@ -152,20 +156,21 @@ transformed data {
   }
 
   // convert pseudo-ragged arrays to vectors
-  Wobsvec_man = ragged_vec(Wobs, hasdat_man);
-  Sobsvec_man = ragged_vec(Sobs, hasdat_man);
-  dApos_obs = ragged_vec(dApos_array, hasdat_man);
+  Wobsvec_man = ragged_vec(Wobs, hasdat);
+  Sobsvec_man = ragged_vec(Sobs, hasdat);
+  dApos_obs = ragged_vec(dApos_array, hasdat);
 
   logWobs_man = log(Wobsvec_man);
   logSobs_man = log(Sobsvec_man);
 
-  sigmavec_man = ragged_vec(sigma_post, hasdat_man);
+  sigmavec_man = ragged_vec(sigma_post, hasdat);
 }
 
 //Set up surface-level parameters
 parameters {
   vector<lower=lowerbound_logk,upper=upperbound_logk>[nt] logk;
   vector<lower=lowerbound_A0,upper=upperbound_A0>[nx] A0[inc];
+  vector<lower=lowerbound_logn,upper=upperbound_logn>[nx] logn[inc];
 
   vector<lower=0>[ntot_man] Sact[meas_err * inc];
   vector<lower=0>[ntot_w] Wact[meas_err * inc];
@@ -183,35 +188,29 @@ transformed parameters {
   // Params
   if (inc) {
     if (meas_err) { //Measurement error in slopes and heights
-      logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_act[1]);
-      logk_man[1] = ragged_row(logk, hasdat_man);
+      logA_man[1] = log(ragged_col(A0[1], hasdat) + dApos_act[1]);
+      logk_man[1] = ragged_row(logk, hasdat);
 
-      //Brinkerhoff k600~Ustar model
-      // man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*log(Sact[1]) - 0.5*log(Wact[1]);
-      //  man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model' with eS
+      //eq_lhs[1] = log(76.4) + (0.5625)*log(9.8) + (0.5625)*log(Sact[1]) - (0.6875)*log(Wact[1]);
+      //eq_rhs[1] = logk_man[1] - (0.6875)*logA_man[1];
 
-      //man_lhs[1] = 0.3997133*logWobs_man - 0.899355*log(Sact[1]) - log(85.10025) - 0.59957*log(9.8);
-      //man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
-
-      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model'
-      eq_lhs[1] = log(76.4) + (0.5625)*log(9.8) + (0.5625)*log(Sact[1]) - (0.6875)*log(Wact[1]);
-      eq_rhs[1] = logk_man[1] - (0.6875)*logA_man[1];
+      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model' with eD
+      eq_lhs[1] = log(62.82) + (0.4375)*log(9.8) + (0.5625)*log(Sact[1]) - (0.7291667)*log(Wact[1]);
+      eq_rhs[1] = logk_man[1] + (0.25)*ragged_col(logn[1], hasdat) - (0.7291667)*logA_man[1];
     }
 
     else { //No measurement error in slopes and heights
-      logk_man[1] = ragged_row(logk, hasdat_man);
-      logA_man[1] = log(ragged_col(A0[1], hasdat_man) + dApos_obs);
+      logk_man[1] = ragged_row(logk, hasdat);
+      logA_man[1] = log(ragged_col(A0[1], hasdat) + dApos_obs);
 
-      //Brinkerhoff k600~Ustar model
-      // man_lhs[1] = log(56.0294) + 0.5*log(9.8) + 0.5*logSobs_man - 0.5*logWobs_man;
-      // man_rhs[1] = logk_man[1] - 0.5*logA_man[1];
+      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model' with eS
+  //    eq_lhs[1] = log(76.4) + (0.5625)*log(9.8) + (0.5625)*logSobs_man - (0.6875)*logWobs_man;
+  //    eq_rhs[1] = logk_man[1] - (0.6875)*logA_man[1];
 
-      //   man_lhs[1] = 0.3997133*logWobs_man - 0.899355*logSobs_man - log(85.10025) - 0.59957*log(9.8);
-      //   man_rhs[1] = 0.3997133*(logA_man[1]) - 0.59957*logN_man[1] - logk_man[1];
-
-      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model'
-      eq_lhs[1] = log(76.4) + (0.5625)*log(9.8) + (0.5625)*logSobs_man - (0.6875)*logWobs_man;
-      eq_rhs[1] = logk_man[1] - (0.6875)*logA_man[1];
+      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model' with eD
+      eq_lhs[1] = log(62.82) + (0.4375)*log(9.8) + (0.5625)*logSobs_man - (0.7291667)*logWobs_man;
+      eq_rhs[1] = logk_man[1] + (0.25)*ragged_col(logn[1], hasdat) - (0.7291667)*logA_man[1];
     }
   }
 }
@@ -221,6 +220,7 @@ model {
   // Priors
   if (inc) {
     A0[1] + dA_shift[1] ~ lognormal(logA0_hat, logA0_sd);
+    logn[1] ~ normal(logn_hat, logn_sd);
     logk[1] ~ normal(logk_hat, logk_sd);
   }
 

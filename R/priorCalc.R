@@ -11,9 +11,9 @@ estimate_logk <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
   colSobs <- colMeans(Sobs, na.rm=T)
- # khat <- 5.0941 + 0.6417*colSobs #ifelse(colSobs < -4.634, 3.22 + 0.347*colSobs, 6.85 + 1.13*colSobs)
-  #khat <- log(56.0294*exp(-0.69945)*colSobs^0.29587) #r2 0.54 for ustar~slope relation using ulseth data where Rh=H. The 56.0294 is the parameter from k600~ustar model
-  khat <- log(35.5*(9.8*colSobs)^(9/16)) #r2: 0.60
+
+ # khat <- log(35.5*(9.8*colSobs)^(9/16)) #r2: 0.60 CHAINSAW/ES MODEL
+  khat <- log(47.2*9.8^(7/16)*colSobs^(9/16)) #r2: 0.60 CHAINSAW/ED MODEL
 }
 
 #' Estimate k sd prior using biker data for k600 model
@@ -23,12 +23,14 @@ estimate_logk <- function(Sobs){
 estimate_logksd <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  #ksd <- rep(1.160585, ncol(Sobs)) #propogated standard errors for k600~ustar model and ustar~slope model
-  ksd <- rep(log(3.45), ncol(Sobs)) #standard error of logk_hat model trained on my dataset of field-measured k600
+  ksd <- rep(log(3.45), ncol(Sobs)) #standard error for CHAINSAW/ES MODEL
+  ksd <- rep(log(3.45), ncol(Sobs)) #standard error for CHAINSAW/ED MODEL
 }
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------
-#class 17 are 'big' riverrs
+#class 17 are 'big' rivers
+#class 16 are highly width variable
+#These are now using a lookup table generated from additinal filtering for the geobam prior dataset FYI. See ~/ngoing_Projects/geoBAM_update_Summer_2021 for the script and lookup tables
 
 #' Estimate base cross-sectional area using bam data
 #'
@@ -41,20 +43,20 @@ estimate_logA0 <- function(Wobs) {
   #Expert classification
   temp <- c(3.723280881,
             4.497073804,
-            4.753590191,
+            4.736198448,
             4.990432587,
-            4.911328517,
-            5.350615603,
+            4.844063071,
+            5.369441357,
             5.422742508,
             5.523458921,
             5.774532256,
             6.446836611,
             6.527953643,
             6.873163834,
-            7.102499356,
-            8.007965013,
-            8.937204637,
-            4.432006567)
+            7.13630945,
+            7.996317232,
+            8.743785303,
+            4.428426599)
 
   class <- apply(Wobs, 1, classify_func)
   logA0_hat <- ifelse(class != 17, temp[class], -0.2918 + 1.6930 * lwbar - 0.1887 * lwsd) #repeat for each sptial unit
@@ -70,24 +72,6 @@ estimate_lowerboundA0 <- function(Wobs) {
   lwbar <- apply(log(Wobs), 1, mean, na.rm = TRUE)
   lwsd <- apply(log(Wobs), 1, sd, na.rm = TRUE)
 
-  # #expert classification (min)
-  # temp <- c(0.732367894,
-  #           1.508511994,
-  #           0.91027266,
-  #           2.517696473,
-  #           1.199964783,
-  #           2.681021529,
-  #           2.148850993,
-  #           1.545432582,
-  #           2.415913778,
-  #           3.106826321,
-  #           3.874321138,
-  #           2.694627181,
-  #           3.696351469,
-  #           3.593194204,
-  #           4.043928076,
-  #           0.262364264)
-
   #expert classification (p5)
   temp <- c(1.627714731,
             2.437710905,
@@ -97,7 +81,7 @@ estimate_lowerboundA0 <- function(Wobs) {
             3.692086845,
             3.890215272,
             3.46067656,
-            3.632309103,
+            3.613981618,
             4.042002548,
             4.063218741,
             4.203662669,
@@ -107,7 +91,7 @@ estimate_lowerboundA0 <- function(Wobs) {
             1.942398159)
 
   class <- apply(Wobs, 1, classify_func)
-  lowerbound_A0 <- ifelse(class != 17, exp(temp[class]), exp(5.928895938))
+  lowerbound_A0 <- ifelse(class != 17, exp(temp[class]), exp(5.928895938)) #class 15 p5 value
   lowerbound_A0 <- min(lowerbound_A0, na.rm = TRUE)
 }
 
@@ -120,24 +104,6 @@ estimate_upperboundA0 <- function(Wobs) {
   lwbar <- apply(log(Wobs), 1, mean, na.rm = TRUE)
   lwsd <- apply(log(Wobs), 1, sd, na.rm = TRUE)
 
-  #expert classification (max)
-  # temp <- c(7.640123173,
-  #           7.355641103,
-  #           8.997147152,
-  #           9.164296433,
-  #           8.554488976,
-  #           9.417354541,
-  #           7.677863501,
-  #           8.144679183,
-  #           7.863266724,
-  #           8.793308627,
-  #           8.776475789,
-  #           9.014325488,
-  #           8.78186249,
-  #           9.61580548,
-  #           11.6483301,
-  #           11.55214618)
-
   #expert classification (p95)
   temp <- c(6.592711677,
             7.007838922,
@@ -147,7 +113,7 @@ estimate_upperboundA0 <- function(Wobs) {
             7.882304158,
             7.461640392,
             7.800850866,
-            7.339537695,
+            7.288859014,
             8.178015738,
             8.139949251,
             8.289026216,
@@ -157,7 +123,7 @@ estimate_upperboundA0 <- function(Wobs) {
             8.994142514)
 
   class <- apply(Wobs, 1, classify_func)
-  upperbound_A0 <- ifelse(class != 17, exp(temp[class]), exp(11.12726298))
+  upperbound_A0 <- ifelse(class != 17, exp(temp[class]), exp(10.48217535)) #class 15 p95 value
   upperbound <- max(upperbound_A0, na.rm = TRUE)
 }
 
@@ -172,22 +138,82 @@ estimate_A0SD <- function(Wobs) {
   #expert classification
   temp <- c(1.446820524,
             1.350055707,
-            1.363875688,
-            1.260787706,
-            1.306619211,
-            1.315826017,
+            1.365242448,
+            1.258756782,
+            1.302566576,
+            1.311046184,
             1.190542029,
             1.337220271,
             1.21047899,
             1.359096608,
             1.245863462,
             1.287297345,
-            1.08535437,
-            1.154319081,
-            1.5575699,
-            2.272342301)
+            1.109424148,
+            1.144803558,
+            1.454662355,
+            2.233590129)
 
   class <- apply(Wobs, 1, classify_func)
   logA0_sd <- ifelse(class != 17, temp[class], 0.58987527)
 }
 
+#' Estimate manning's n using bam data
+#'
+#' @param Wobs Observed W,as a space-down, time-across matrix
+#' @export
+estimate_logn <- function(Wobs, Sobs) {
+  Sobs[Sobs <= 0] <- NA # I replaced missing values with 0 so Stan will accept
+  Wobs[Wobs <= 0] <- NA # I replaced missing values with 0 so Stan will accept
+  lsbar <- apply(log(Sobs), 1, mean, na.rm = TRUE)
+  #Expert classification
+  temp <- c(-2.985277801,
+            -3.218074003,
+            -3.085265829,
+            -3.316850463,
+            -3.318215717,
+            -3.143583451,
+            -3.456243594,
+            -3.545592423,
+            -3.240085716,
+            -3.401877538,
+            -3.278677422,
+            -3.372948626,
+            -3.395070774,
+            -3.30626809,
+            -3.455433411,
+            -3.318541261)
+
+  class <- apply(Wobs, 1, classify_func)
+  logn_hat <- ifelse(class != 17, temp[class], -0.1636 + 0.4077 * lsbar) #repeat for each spatial unit
+  #Global r2: 0.631
+}
+
+#' Estimate manning's n SD using bam dat
+#'
+#' @param Wobs Observed W,as a space-down, time-across matrix.
+#' @export
+estimate_lognSD <- function(Wobs) {
+  Wobs[Wobs <= 0] <- NA # I replaced missing values with 0 so Stan will accept
+  lwbar <- apply(log(Wobs), 1, mean, na.rm = TRUE)
+  lwsd <- apply(log(Wobs), 1, sd, na.rm = TRUE)
+  #expert classification
+  temp <- c(1.029408933,
+            1.004209047,
+            1.047755392,
+            1.055423371,
+            1.091631839,
+            1.059532393,
+            1.205687421,
+            1.229666517,
+            1.101795647,
+            1.194241604,
+            1.225854067,
+            1.167193097,
+            1.152000583,
+            1.285632655,
+            1.343539617,
+            1.102026911)
+
+  class <- apply(Wobs, 1, classify_func)
+  logn_sd <- ifelse(class != 17, temp[class], 0.761673112) #standard error from regression in estimate_logn
+}

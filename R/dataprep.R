@@ -105,12 +105,12 @@ biker_check_nas <- function(datalist) {
     hasdat_a <- (!is.na(datalist[["dAobs"]])) * 1
     hasdat_w <- (!is.na(datalist[["Wobs"]])) * 1
 
-    hasdat_man <- hasdat_w * hasdat_s * hasdat_a
+    hasdat <- hasdat_w * hasdat_s * hasdat_a
 
     # Replace NA's with zeros so Stan will accept the data
-    datalist[["Sobs"]][!hasdat_man] <- 0
-    datalist[["dAobs"]][!hasdat_man] <- 0
-    datalist[["Wobs"]][!hasdat_man] <- 0
+    datalist[["Sobs"]][!hasdat] <- 0
+    datalist[["dAobs"]][!hasdat] <- 0
+    datalist[["Wobs"]][!hasdat] <- 0
   } else {
     stop('Not all Mannings observables are present!')
   }
@@ -129,8 +129,8 @@ biker_check_nas <- function(datalist) {
   }
 
   newbits <- list(
-    hasdat_man = hasdat_man,
-    ntot_man = sum(hasdat_man),
+    hasdat = hasdat,
+    ntot_man = sum(hasdat),
     dA_shift = dA_shift
   )
 
@@ -175,8 +175,9 @@ biker_priors <- function(bikerdata,
   sigma_paramset <- params[sigma_paramset]
 
   #total priors needed to run geoBAM
-  biker_paramset <- c("lowerbound_logk", "upperbound_logk", "lowerbound_A0","upperbound_A0",
-                      "logA0_hat","logk_hat", "logA0_sd", "logk_sd")
+  biker_paramset <- c("lowerbound_logk", "upperbound_logk", "lowerbound_A0","upperbound_A0", "lowerbound_logn", "upperbound_logn",
+                      "logA0_hat","logk_hat","logn_hat",
+                      "logA0_sd", "logk_sd", "logn_sd")
   bikerparams <- params[biker_paramset]
 
   riverType <- params[c("River_Type")]
