@@ -13,7 +13,7 @@ estimate_logk <- function(Sobs){
   colSobs <- colMeans(Sobs, na.rm=T)
 
  # khat <- log(35.5*(9.8*colSobs)^(9/16)) #r2: 0.60 CHAINSAW/ES MODEL
-  khat <- log(47.2*9.8^(7/16)*colSobs^(9/16)) #r2: 0.60 CHAINSAW/ED MODEL
+  khat <- rep(log(62.82*(9.8*colMeans(S_obs, na.rm=T))^(7/16)*(0.265*priorQ^0.395)^(9/16)*(0.284*priorQ^0.191)^(1/4), ncol(W_obs))) #prior via Brinkerhoff etal 2019 rating curves and Qwbm prior
 }
 
 #' Estimate k sd prior using biker data for k600 model
@@ -23,8 +23,8 @@ estimate_logk <- function(Sobs){
 estimate_logksd <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  ksd <- rep(log(3.45), ncol(Sobs)) #standard error for CHAINSAW/ES MODEL
-  ksd <- rep(log(3.45), ncol(Sobs)) #standard error for CHAINSAW/ED MODEL
+  #ksd <- rep(log(3.45), ncol(Sobs)) #standard error for CHAINSAW/ES MODEL
+  ksd <- rep(cv2sigma(1), ncol(Sobs)) #standard error for CHAINSAW/ED MODEL
 }
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------
