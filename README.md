@@ -1,7 +1,7 @@
 # BIKER
 "Bayesian Inference/Inversion of the K600 Evasion Rate"
 
-BIKER enables estimation of the normalized riverine gas exchange velocity from measurements of river surface width and height/slope. It does so using Bayesian inference and a Hamiltonian Monte Carlo sampler to generate a posterior distribution for a gas exchange model. BIKER was developed in the context of the NASA/CNES/UKSA/CSA SWOT mission (https://swot.jpl.nasa.gov/mission/overview/). The academic manuscript associated with this model development and validation is in preperation. The code for developing and validing BIKER (as well as writing the manuscript in RMarkdown) is available at https://github.com/craigbrinkerhoff/RSK600.
+BIKER enables estimation of the normalized riverine gas exchange velocity from measurements of river surface width and height/slope. It does so using Bayesian inference and a Hamiltonian Monte Carlo sampler to generate a posterior distribution for a gas exchange model. BIKER was developed in the context of the NASA/CNES/UKSA/CSA SWOT mission (https://swot.jpl.nasa.gov/mission/overview/). The academic manuscript associated with this model development and validation is in preparation. The code for developing and validating BIKER (as well as writing the manuscript in RMarkdown) is available at https://github.com/craigbrinkerhoff/RSK600.
 
 ## Installation
 ```
@@ -10,6 +10,8 @@ devtools::install_github("craigbrinkerhoff/BIKER", ref='main', force=TRUE)
 ```
 
 ## Getting started
+See 'BIKER-manual.pdf' for all package information. Below are some notes to get you started on actually using the package.
+
 To run BIKER, the following workflow is ideal. Note that BIKER follows a standard hydrology setup for the discretization of the river observations along a mass-conserved river reach. This means that matrix rows represent spatial steps along the reach while matrix columns represent timesteps for these observations.
 
 #### Inputs
@@ -19,7 +21,7 @@ BIKER requires 3 inputs: <br>
 - *dAobs*: a matrix of 'change in cross-sectional channel areas'. This must be approximated by the user. We generally assume a rectangular river channel so that this can be calculated as *Wobs* times the change in *Hobs* per timestep, where *Hobs* is the matrix of water-surface elevations.
 
 #### Run BIKER
-The following is the series of fuctions that need to be run (in this order) to use BIKER. Consult the help key in R to see examples. The below code will return the *k600* posterior mean and 95% confidence intervals (CIs) by default. The user can specify their CIs of choice in the biker_estimate function. Note that the 'meas_err' option should always be left to false as it is currently a work in progress and will produce erronous *k600* estimates.<br>
+The following is the series of functions that need to be run (in this order) to use BIKER. Consult the help key in R to see examples. The below code will return the *k600* posterior mean and 95% confidence intervals (CIs) by default. The user can specify their CIs of choice in the biker_estimate function. Note that the 'meas_err' option should always be left to false as it is currently a work in progress and will produce erroneous *k600* estimates.<br>
 
 ```
 reach_data <- biker_data(w=Wobs, s=Wobs, da=dAobs) #collect data into object the algorithm can read
@@ -38,4 +40,4 @@ If you want the full list of customizable prior hyperparameters, run the followi
 prior_settings()
 ```
 
-Finally, the 'cv2sigma()' function is included to if you want to specify hyperparameters by the cofficient of variation. This is mostly useful for the sigma hyperparameters.
+Finally, the 'cv2sigma()' function is included to if you want to specify hyperparameters by the coefficient of variation. This is mostly useful for the sigma hyperparameters.

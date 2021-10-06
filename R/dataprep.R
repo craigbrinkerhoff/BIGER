@@ -65,8 +65,10 @@ biker_data <- function(w,
 #'
 #' @param datalist A list of biker data inputs
 biker_check_args <- function(datalist) {
-  matlist <- datalist[names(datalist)]
+  priorQ <- datalist$priorQ
+  matlist <- datalist[names(datalist) != "priorQ"]
 
+  # Check types
   if (!all(vapply(matlist, is, logical(1), "matrix")))
     stop("All data must be a supplied as a matrix.\n")
 
@@ -78,7 +80,7 @@ biker_check_args <- function(datalist) {
         all(vapply(matlist, ncol, 0L) == nc)))
     stop("All data must have same dimensions.\n")
 
-  out <- c(matlist)
+  out <- c(matlist, list(priorQ = priorQ))
 
   out
 }
