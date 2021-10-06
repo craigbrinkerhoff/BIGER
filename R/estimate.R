@@ -14,6 +14,8 @@
 #'   from calling \code{biker_priors(bikerdata)} (with no other arguments).
 #' @param cores Number of processing cores for running chains in parallel.
 #'   See \code{?rstan::sampling}. Defaults to \code{parallel::detectCores()}.
+#' @param meas_error Should we run with latent variables accounting for uncertainity in SWOT measurements.
+#'   LEAVE THIS OFF, IT IS IN ACTIVE DEVELOPMENT
 #' @param chains A positive integer specifying the number of Markov chains.
 #'   The default is 3.
 #' @param iter Number of iterations per chain (including warmup). Defaults to 1000.
@@ -31,7 +33,7 @@
 #' @import rstan
 #' @export
 biker_estimate <- function(bikerdata,
-                         bikerpriors = NULL,
+                         bikerpriors,
                          cores = getOption("mc.cores", default = parallel::detectCores()),
                          meas_error = FALSE,
                          chains = 3L,
@@ -42,10 +44,6 @@ biker_estimate <- function(bikerdata,
                          include = FALSE,
                          suppressOutput = 1,
                          ...) {
-  stopifnot(is(bikerdata, "bikerdata"))
-  if (is.null(bikerpriors))
-    bikerpriors <- biker_priors(bikerdata)
-  stopifnot(is(bikerpriors, "bikerpriors"))
 
   #reformat priors to a single list for stan
   bikerpriors <- c(bikerpriors[[2]], bikerpriors[[3]])

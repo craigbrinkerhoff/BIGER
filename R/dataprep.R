@@ -15,6 +15,7 @@
 #' @param w Matrix (or data frame) of widths: time as columns, space as rows
 #' @param s Matrix of slopes: time as columns, space as rows
 #' @param dA Matrix of area above base area: time as columns, space as rows
+#' @param priorQ Mean annual flow prior for Q
 #' @param max_xs Maximum number of cross-sections to allow in data. Used to reduce
 #'   sampling time. Defaults to 30.
 #' @param seed RNG seed to use for sampling cross-sections, if nx > max_xs.
@@ -23,6 +24,7 @@
 biker_data <- function(w,
                      s,
                      dA,
+                     priorQ,
                      max_xs = 30L,
                      seed = NULL) {
 
@@ -34,7 +36,8 @@ biker_data <- function(w,
 
   datalist <- list(Wobs = w,
                 Sobs = s,
-                dAobs = dA)
+                dAobs = dA,
+                priorQ=priorQ)
 
   datalist <- biker_check_args(datalist)
   datalist <- biker_check_nas(datalist)

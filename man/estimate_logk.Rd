@@ -4,10 +4,12 @@
 \alias{estimate_logk}
 \title{Estimate k_hat using biker data for k600 model}
 \usage{
-estimate_logk(Sobs)
+estimate_logk(Sobs, priorQ)
 }
 \arguments{
 \item{Sobs}{Observed S,as a space-down, time-across matrix}
+
+\item{priorQ}{mean annual flow estimate, single number}
 }
 \description{
 Estimate k_hat using biker data for k600 model

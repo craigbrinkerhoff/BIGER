@@ -6,7 +6,7 @@
 \usage{
 biker_estimate(
   bikerdata,
-  bikerpriors = NULL,
+  bikerpriors,
   cores = getOption("mc.cores", default = parallel::detectCores()),
   meas_error = FALSE,
   chains = 3L,
@@ -27,6 +27,9 @@ from calling \code{biker_priors(bikerdata)} (with no other arguments).}
 
 \item{cores}{Number of processing cores for running chains in parallel.
 See \code{?rstan::sampling}. Defaults to \code{parallel::detectCores()}.}
+
+\item{meas_error}{Should we run with latent variables accounting for uncertainity in SWOT measurements.
+LEAVE THIS OFF, IT IS IN ACTIVE DEVELOPMENT}
 
 \item{chains}{A positive integer specifying the number of Markov chains.
 The default is 3.}

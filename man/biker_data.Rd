@@ -4,7 +4,7 @@
 \alias{biker_data}
 \title{Preprocess data for BIKER estimation}
 \usage{
-biker_data(w, s, dA, max_xs = 30L, seed = NULL)
+biker_data(w, s, dA, priorQ, max_xs = 30L, seed = NULL)
 }
 \arguments{
 \item{w}{Matrix (or data frame) of widths: time as columns, space as rows}
@@ -12,6 +12,8 @@ biker_data(w, s, dA, max_xs = 30L, seed = NULL)
 \item{s}{Matrix of slopes: time as columns, space as rows}
 
 \item{dA}{Matrix of area above base area: time as columns, space as rows}
+
+\item{priorQ}{Mean annual flow prior for Q}
 
 \item{max_xs}{Maximum number of cross-sections to allow in data. Used to reduce
 sampling time. Defaults to 30.}

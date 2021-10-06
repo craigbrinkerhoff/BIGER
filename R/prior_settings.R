@@ -28,7 +28,7 @@ prior_settings <- settings::options_manager(
 
   # Hyperparameters via geoBAM & k prior
   logA0_hat = rlang::quo(estimate_logA0(Wobs)),
-  logk_hat = rlang::quo(estimate_logk(Sobs)),
+  logk_hat = rlang::quo(estimate_logk(Sobs, priorQ)),
   logn_hat = rlang::quo(estimate_logn(Wobs, Sobs)),
 
   #from geoBAM & k prior

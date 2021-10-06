@@ -8,6 +8,8 @@ estimate_logn(Wobs, Sobs)
 }
 \arguments{
 \item{Wobs}{Observed W,as a space-down, time-across matrix}
+
+\item{Sobs}{Observed s, as a space-down, time-across matrix}
 }
 \description{
 Estimate manning's n using bam data
