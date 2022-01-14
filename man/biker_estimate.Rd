@@ -11,44 +11,29 @@ biker_estimate(
   meas_error = FALSE,
   chains = 3L,
   iter = 1000L,
-  CI = 0.95,
-  chainExtract = "all",
   pars = NULL,
   include = FALSE,
-  suppressOutput = 1,
   ...
 )
 }
 \arguments{
 \item{bikerdata}{A bikerdata object, as produced by \code{biker_data()}}
 
-\item{bikerpriors}{A bikerpriors object. If none is supplied, defaults are used
-from calling \code{biker_priors(bikerdata)} (with no other arguments).}
+\item{bikerpriors}{A bikerpriors object.}
 
 \item{cores}{Number of processing cores for running chains in parallel.
 See \code{?rstan::sampling}. Defaults to \code{parallel::detectCores()}.}
 
-\item{meas_error}{Should we run with latent variables accounting for uncertainity in SWOT measurements.
-LEAVE THIS OFF, IT IS IN ACTIVE DEVELOPMENT}
+\item{meas_error}{Should we run with latent variables accounting for uncertainity in SWOT measurements. LEAVE THIS OFF, IT IS IN ACTIVE DEVELOPMENT}
 
-\item{chains}{A positive integer specifying the number of Markov chains.
-The default is 3.}
+\item{chains}{A positive integer specifying the number of Markov chains. The default is 3.}
 
 \item{iter}{Number of iterations per chain (including warmup). Defaults to 1000.}
 
-\item{CI}{A postive integer between 0 and 1 indicating the confidence interval to return with the estimate. Default is 0.95.}
-
-\item{chainExtract}{Either an integer specifying which chain(s) to extract statistics from,
-or "all" (the default), in which case they are extracted from all chains.}
-
-\item{pars}{(passed to \code{rstan::sampling()}) A vector of character strings specifying
-parameters of interest to be returned in the stanfit object. If not specified,
-a default parameter set is returned.}
+\item{pars}{(passed to \code{rstan::sampling()}) A vector of character strings specifying parameters of interest to be returned in the stanfit object. If not specified, a default parameter set is returned.}
 
 \item{include}{(passed to \code{rstan::sampling()}) Defaults to FALSE, which
 excludes parameters specified in \code{pars} from the returned model.}
-
-\item{suppressOutput}{(passed to \code{rstan::sampling()}) Determines whether stan sampling updates are printed to the console. Defaults to 1. Any value <= 0 will suppress output.}
 
 \item{...}{Other arguments passed to rstan::sampling() for customizing the
 Monte Carlo sampler}

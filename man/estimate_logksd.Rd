@@ -2,7 +2,7 @@
 % Please edit documentation in R/priorCalc.R
 \name{estimate_logksd}
 \alias{estimate_logksd}
-\title{Estimate k sd prior using biker data for k600 model}
+\title{logk_sd prior estimation}
 \usage{
 estimate_logksd(Sobs)
 }
@@ -10,5 +10,5 @@ estimate_logksd(Sobs)
 \item{Sobs}{Observed S,as a space-down, time-across matrix}
 }
 \description{
-Estimate k sd prior using biker data for k600 model
+Estimate k sd prior hyperparameter using swot data
 }

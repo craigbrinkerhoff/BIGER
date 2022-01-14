@@ -7,13 +7,13 @@
 biker_data(w, s, dA, priorQ, max_xs = 30L, seed = NULL)
 }
 \arguments{
-\item{w}{Matrix (or data frame) of widths: time as columns, space as rows}
+\item{w}{Matrix of widths: time as columns, space as rows}
 
 \item{s}{Matrix of slopes: time as columns, space as rows}
 
 \item{dA}{Matrix of area above base area: time as columns, space as rows}
 
-\item{priorQ}{Mean annual flow prior for Q}
+\item{priorQ}{Mean annual flow prior for Q as a matrix}
 
 \item{max_xs}{Maximum number of cross-sections to allow in data. Used to reduce
 sampling time. Defaults to 30.}

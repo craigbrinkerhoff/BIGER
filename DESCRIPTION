@@ -1,13 +1,13 @@
 Package: BIKER
-Title: Bayesian Inference/Inversion of the K600 Evasion Rate
-Version: 0.0.0.9000
+Title: Bayesian Inference of the K600 Evasion Rate
+Version: 1.0.0
 Authors@R: 
     person(given = "Craig",
            family = "Brinkerhoff",
            role = c("aut", "cre"),
            email = "cbrinkerhoff@umass.edu",
            comment = c(ORCID = "0000-0001-6701-4835"))
-Description: Uses Bayesian inference + SWOT observations to estimate the normalized gas transfer velocity from rivers, no in situ info needed.
+Description: Uses Bayesian inference + SWOT river measurements to estimate the normalized gas exchange velocity from rivers, no in situ info needed beyond a prior estimate on streamflow. Algorithm inputs are river width, water surface slope, the change in water surface area, and a prior estiate of average streamflow conditions. The algorithm returns the posterior mean (and 95% CIs) for the normalized river gas exchange velocity for the river reach over time. Note that prior hyperparameters are determined using just the SWOT observations, so all we need to provide BIKER are the SWOT observations and a mean flow estimate.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

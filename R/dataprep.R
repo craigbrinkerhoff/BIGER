@@ -1,5 +1,6 @@
-#Functions to prepare SWOT observations for the inversion model
-
+########################
+#Functions to prepare SWOT observations for the inference model
+#########################
 
 # Using advice from read-and-delete-me:
 # "Be sure to add useDynLib(mypackage, .registration = TRUE) to the NAMESPACE file
@@ -7,38 +8,41 @@
 # in one of your .R files
 # see rstanarm's 'rstanarm-package.R' file"
 
+
+
 #' Preprocess data for BIKER estimation
 #'
 #' Produces a bikerdata object that can be passed to biker_estimate function
 #'
 #' @useDynLib BIKER, .registration = TRUE
-#' @param w Matrix (or data frame) of widths: time as columns, space as rows
+#' @param w Matrix of widths: time as columns, space as rows
 #' @param s Matrix of slopes: time as columns, space as rows
 #' @param dA Matrix of area above base area: time as columns, space as rows
-#' @param priorQ Mean annual flow prior for Q
+#' @param priorQ Mean annual flow prior for Q as a matrix
 #' @param max_xs Maximum number of cross-sections to allow in data. Used to reduce
 #'   sampling time. Defaults to 30.
 #' @param seed RNG seed to use for sampling cross-sections, if nx > max_xs.
 #' @export
-
 biker_data <- function(w,
                      s,
                      dA,
                      priorQ,
                      max_xs = 30L,
                      seed = NULL) {
-
+  
+  #confirm data can use Manning's equation (i.e. has slopes and dAs)
   manning_ready <- !is.null(s) && !is.null(dA)
-  if (!manning_ready) {
+  if (!manning_ready) { #I think this is a holdover from BAM where it doesn't necc need to be mannings ready
     s <- dA <- matrix(1, nrow = nrow(w), ncol = ncol(w))
   }
 
-
+  #produce biker object
   datalist <- list(Wobs = w,
                 Sobs = s,
                 dAobs = dA,
                 priorQ=priorQ)
 
+  #check data
   datalist <- biker_check_args(datalist)
   datalist <- biker_check_nas(datalist)
 
@@ -61,7 +65,7 @@ biker_data <- function(w,
 #' - types:
 #'     - everything else matrix
 #' - dimensions:
-#'     - all matrices have same dims
+#'     - all matrices have same dimensions
 #'
 #' @param datalist A list of biker data inputs
 biker_check_args <- function(datalist) {
@@ -90,10 +94,6 @@ biker_check_args <- function(datalist) {
 #' Binary matrices indicating where data are/aren't missing are
 #' added to the data list. This is required in order to run
 #' ragged-array data structures in the stanfile.
-#'
-#' Previously this function omitted any times with missing data,
-#' but now that ragged arrays are accommodated in the stanfile the
-#' operations are entirely different.
 #'
 #' @param datalist a list of BIKER inputs
 #' @importFrom stats median
@@ -152,18 +152,21 @@ biker_check_nas <- function(datalist) {
 #' @param ... Optional manually set parameters. Unquoted expressions are allowed,
 #'   e.g. \code{logk_sd = cv2sigma(0.8)}. Additionally, any variables present in
 #'   \code{bikerdata} may be referenced, e.g. \code{lowerbound_logk = log(mean(Wobs)) + log(5)}
+#' @importFrom rlang quos
+#' @importFrom rlang eval_tidy
+#' @importFrom settings clone_and_merge
 #' @export
 biker_priors <- function(bikerdata,
                         ...) {
   force(bikerdata)
   paramset <- prior_settings("paramnames")
 
-  myparams0 <- rlang::quos(..., .named = TRUE)
-  myparams <- do.call(settings::clone_and_merge,
+  myparams0 <- quos(..., .named = TRUE)
+  myparams <- do.call(clone_and_merge,
                       args = c(list(options = prior_settings), myparams0))
 
   quoparams <- myparams()[-1] # first one is parameter set
-  params <- lapply(quoparams, rlang::eval_tidy, data = bikerdata)
+  params <- lapply(quoparams, eval_tidy, data = bikerdata)
 
   if (!length(params[["logk_sd"]]) == bikerdata$nt)
     params$logk6_sd <- rep(params$logk_sd, length.out = bikerdata$nt)
@@ -192,16 +195,6 @@ biker_priors <- function(bikerdata,
                    class = c("bikerpriors"))
   out
 }
-
-compose_biker_inputs <- function(bikerdata, priors = biker_priors(bikerdata)) {
-
-  inps <- c(bikerdata, priors)
-
-  out <- inps
-  out
-
-}
-
 
 #' Take a random sample of a bikerdata object's cross-sections.
 #'

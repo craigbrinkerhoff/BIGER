@@ -2,7 +2,7 @@
 % Please edit documentation in R/priorCalc.R
 \name{estimate_lognSD}
 \alias{estimate_lognSD}
-\title{Estimate manning's n SD using bam dat}
+\title{logn_sd prior estimation}
 \usage{
 estimate_lognSD(Wobs)
 }
@@ -10,5 +10,5 @@ estimate_lognSD(Wobs)
 \item{Wobs}{Observed W,as a space-down, time-across matrix.}
 }
 \description{
-Estimate manning's n SD using bam dat
+Estimate manning's n SD prior hyperparameter using swot data
 }

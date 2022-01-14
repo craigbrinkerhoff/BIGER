@@ -2,7 +2,7 @@
 % Please edit documentation in R/priorCalc.R
 \name{estimate_logA0}
 \alias{estimate_logA0}
-\title{Estimate base cross-sectional area using bam data}
+\title{logA0_hat prior estimation}
 \usage{
 estimate_logA0(Wobs)
 }
@@ -10,5 +10,5 @@ estimate_logA0(Wobs)
 \item{Wobs}{Observed W,as a space-down, time-across matrix}
 }
 \description{
-Estimate base cross-sectional area using bam data
+Estimate median cross-sectional area prior hyperparameter using swot data
 }

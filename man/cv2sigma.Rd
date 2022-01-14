@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{cv2sigma}
 \alias{cv2sigma}
-\title{Convert coefficient of variation to sigma parameter of lognormal diistribution}
+\title{CV to sigma}
 \usage{
 cv2sigma(cv)
 }
@@ -10,5 +10,5 @@ cv2sigma(cv)
 \item{cv}{Coefficient of variation}
 }
 \description{
-Convert coefficient of variation to sigma parameter of lognormal diistribution
+Convert coefficient of variation to sigma parameter of lognormal distribution
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{classify_func}
 \alias{classify_func}
-\title{Classify river for expert framework}
+\title{Geomorphic river classification}
 \usage{
 classify_func(Wobs)
 }

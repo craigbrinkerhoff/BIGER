@@ -1,5 +1,5 @@
 //Craig BIKER stan model for remotely sensing gas transfer velocity
-//Fall 2021
+//Winter 2022
 
 functions {
   // Conversion from array to vector takes place by row.

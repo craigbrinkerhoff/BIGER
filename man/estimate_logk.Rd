@@ -2,7 +2,7 @@
 % Please edit documentation in R/priorCalc.R
 \name{estimate_logk}
 \alias{estimate_logk}
-\title{Estimate k_hat using biker data for k600 model}
+\title{logk_hat prior estimation}
 \usage{
 estimate_logk(Sobs, priorQ)
 }
@@ -12,5 +12,5 @@ estimate_logk(Sobs, priorQ)
 \item{priorQ}{mean annual flow estimate, single number}
 }
 \description{
-Estimate k_hat using biker data for k600 model
+Estimate k_hat prior hyperparameter using swot data
 }

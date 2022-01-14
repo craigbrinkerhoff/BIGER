@@ -1,6 +1,10 @@
+####################
 # Some additional utility functions
+###################
 
-#' Convert coefficient of variation to sigma parameter of lognormal diistribution
+#' CV to sigma
+#' 
+#' Convert coefficient of variation to sigma parameter of lognormal distribution
 #'
 #' @param cv Coefficient of variation
 #' @export
@@ -8,9 +12,24 @@ cv2sigma <- function (cv) {
   sqrt(log(cv^2 + 1))
 }
 
-#Functions for classifying rivers----------------------------------------------------------------------
+#' Prepare biker object for stan model
+#' 
+#' "Decomposes" the structure of the bikerdata pbject into a form more easily read by the stan sampling functions (i.e. a big ole list)
+#' @param bikerdata bikerdata object
+#' @param priors bikerpriors object
+compose_biker_inputs <- function(bikerdata, priors = biker_priors(bikerdata)) {
+  
+  inps <- c(bikerdata, priors)
+  
+  out <- inps
+  out
+  
+}
 
-#'Classify river for expert framework
+
+#' Geomorphic river classification
+#' 
+#' Classify river for expert framework
 #'
 #'@param Wobs observed widths matrix
 classify_func <- function(Wobs) {

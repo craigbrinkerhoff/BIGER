@@ -1,18 +1,37 @@
 # BIKER
-"Bayesian Inference/Inversion of the K600 Evasion Rate"
+"Bayesian Inference of the K600 Evasion Rate"
 
-BIKER enables estimation of the normalized riverine gas exchange velocity from measurements of river surface width and height/slope. It does so using Bayesian inference and a Hamiltonian Monte Carlo sampler to generate a posterior distribution for a gas exchange model. BIKER was developed in the context of the NASA/CNES/UKSA/CSA SWOT mission (https://swot.jpl.nasa.gov/mission/overview/). The academic manuscript associated with this model development and validation is in preparation. The code for developing and validating BIKER (as well as writing the manuscript in RMarkdown) is available at https://github.com/craigbrinkerhoff/RSK600.
+BIKER enables inference of the normalized riverine gas exchange velocity from measurements of river surface width and height/slope. It does so using Bayesian inference and a Hamiltonian Monte Carlo sampler to generate a posterior distribution for a gas exchange model. BIKER was developed in the context of the upcoming NASA/CNES/UKSA/CSA SWOT mission (https://swot.jpl.nasa.gov/mission/overview/). The academic manuscript associated with its development and validation is in preparation. The code for developing and validating BIKER (as well as writing the manuscript in RMarkdown) is available at https://github.com/craigbrinkerhoff/RSK600.
 
 ## Installation
+#### Dependencies
+- R > 3.4.0
+- methods
+- Rcpp
+- rstan
+- rstantools
+- dplyr
+- reshape2
+- rlang
+- settings
+
+#### To install
 ```
-Sys.setenv(TAR = "/bin/tar") #if using a Linux machine...
+# First get devtools package
+if (!require("devtools")) {
+  install.packages("devtools")
+  library("devtools")
+}
+
+#install BIKER
+Sys.setenv(TAR = "/bin/tar") #if using a Linux machine (apparently)...
 devtools::install_github("craigbrinkerhoff/BIKER", ref='main', force=TRUE)
 ```
 
 ## Getting started
 See 'BIKER-manual.pdf' for all package information. Below are some notes to get you started on actually using the package.
 
-To run BIKER, the following workflow is ideal. Note that BIKER follows a standard hydrology setup for the discretization of the river observations along a mass-conserved river reach. This means that matrix rows represent spatial steps along the reach while matrix columns represent timesteps for these observations.
+To run BIKER, the following workflow is ideal. Note that BIKER follows a standard hydrology setup for the discretization of the river observations along a river reach. This means that matrix rows represent spatial steps along the reach while matrix columns represent timesteps for these observations.
 
 #### Inputs
 BIKER requires 3 inputs: <br>
@@ -24,9 +43,10 @@ BIKER requires 3 inputs: <br>
 The following is the series of functions that need to be run (in this order) to use BIKER. Consult the help key in R to see examples. The below code will return the *k600* posterior mean and 95% confidence intervals (CIs) by default. The user can specify their CIs of choice in the biker_estimate function. Note that the 'meas_err' option should always be left to false as it is currently a work in progress and will produce erroneous *k600* estimates.<br>
 
 ```
-reach_data <- biker_data(w=Wobs, s=Wobs, da=dAobs) #collect data into object the algorithm can read
+reach_data <- biker_data(w=Wobs, s=Wobs, da=dAobs) #create an object of class bikerdata
 reach_priors <- biker_priors(reach_data) #estimate prior hyperparameters for Bayesian inference using just river width and slope
-k600_estimates <- biker_estimate(reach_data, reach_priors) #sample from joint posterior distribution to obtain estimates of k600
+k600_estimates <- biker_estimate(reach_data, reach_priors) #sample from joint posterior distribution to parameters
+out <- biker_extract(k600_estimates) #extracts posterior means, sigmas, and CIs for parameters k600, n, and A0
 ```
 
 #### Manually specifying prior hyperparameters

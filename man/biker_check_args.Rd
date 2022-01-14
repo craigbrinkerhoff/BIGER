@@ -6,7 +6,7 @@
 - types:
     - everything else matrix
 - dimensions:
-    - all matrices have same dims}
+    - all matrices have same dimensions}
 \usage{
 biker_check_args(datalist)
 }
@@ -18,5 +18,5 @@ Performs the following checks:
 - types:
     - everything else matrix
 - dimensions:
-    - all matrices have same dims
+    - all matrices have same dimensions
 }

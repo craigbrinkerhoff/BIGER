@@ -2,7 +2,7 @@
 % Please edit documentation in R/priorCalc.R
 \name{estimate_A0SD}
 \alias{estimate_A0SD}
-\title{Estimate base cross-sectional area SD using bam dat}
+\title{logA0_sd prior estimation}
 \usage{
 estimate_A0SD(Wobs)
 }
@@ -10,5 +10,5 @@ estimate_A0SD(Wobs)
 \item{Wobs}{Observed W,as a space-down, time-across matrix.}
 }
 \description{
-Estimate base cross-sectional area SD using bam dat
+Estimate median cross-sectional area SD prior hyperparameter using swot data
 }

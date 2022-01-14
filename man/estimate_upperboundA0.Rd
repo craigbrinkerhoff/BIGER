@@ -2,7 +2,7 @@
 % Please edit documentation in R/priorCalc.R
 \name{estimate_upperboundA0}
 \alias{estimate_upperboundA0}
-\title{Estimate base cross-sectional area upperbound using bam data}
+\title{Upperbound_A0 prior estimation}
 \usage{
 estimate_upperboundA0(Wobs)
 }
@@ -10,5 +10,5 @@ estimate_upperboundA0(Wobs)
 \item{Wobs}{Observed W,as a space-down, time-across matrix.}
 }
 \description{
-Estimate base cross-sectional area upperbound using bam data
+Estimate median cross-sectional area upperbound prior hyperparameter using swot data
 }

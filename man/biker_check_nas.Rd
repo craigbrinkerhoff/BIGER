@@ -14,8 +14,3 @@ Binary matrices indicating where data are/aren't missing are
 added to the data list. This is required in order to run
 ragged-array data structures in the stanfile.
 }
-\details{
-Previously this function omitted any times with missing data,
-but now that ragged arrays are accommodated in the stanfile the
-operations are entirely different.
-}

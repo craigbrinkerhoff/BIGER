@@ -1,9 +1,12 @@
+######################
 #Functions for default prior setup for algorithm (n and A0 functions from Brinkerhoff etal 2020 --> geoBAM-Expert algorithm)
-
+######################
 
 
 #k prior calculations--------------------------------------------------------------------------------------------------
-#' Estimate k_hat using biker data for k600 model
+#' logk_hat prior estimation
+#' 
+#' Estimate k_hat prior hyperparameter using swot data
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
 #' @param priorQ mean annual flow estimate, single number
@@ -12,12 +15,14 @@ estimate_logk <- function(Sobs, priorQ){
   Sobs[Sobs <=0] <- NA
 
   colSobs <- colMeans(Sobs, na.rm=T)
-
- # khat <- log(35.5*(9.8*colSobs)^(9/16)) #r2: 0.60 CHAINSAW/ES MODEL
-  khat <- rep(log(62.82*(9.8*colSobs)^(7/16)*(0.265*priorQ^0.395)^(9/16)*(0.284*priorQ^0.191)^(1/4), ncol(Sobs))) #prior via Brinkerhoff etal 2019 rating curves and Qwbm prior
+  
+  #prior via Brinkerhoff etal 2019 rating curves and Qwbm prior
+  khat <- rep(log(62.82*(9.8*colSobs)^(7/16)*(0.265*priorQ^0.395)^(9/16)*(0.284*priorQ^0.191)^(1/4), ncol(Sobs)))
 }
 
-#' Estimate k sd prior using biker data for k600 model
+#' logk_sd prior estimation
+#' 
+#' Estimate k sd prior hyperparameter using swot data
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
 #' @export
@@ -25,15 +30,17 @@ estimate_logksd <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
   #ksd <- rep(log(3.45), ncol(Sobs)) #standard error for CHAINSAW/ES MODEL
-  ksd <- rep(cv2sigma(1), ncol(Sobs)) #standard error for CHAINSAW/ED MODEL
+  ksd <- rep(0.30, ncol(Sobs)) #standard error for CHAINSAW/ED MODEL
 }
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------
 #class 17 are 'big' rivers
 #class 16 are highly width variable
-#These are now using a lookup table generated from additinal filtering for the geobam prior dataset FYI. See ~/ngoing_Projects/geoBAM_update_Summer_2021 for the script and lookup tables
+#These are now using a lookup table generated from additional filtering for the geobam prior dataset FYI. See ~/ngoing_Projects/geoBAM_update_Summer_2021 for the script and lookup tables
 
-#' Estimate base cross-sectional area using bam data
+#' logA0_hat prior estimation
+#' 
+#' Estimate median cross-sectional area prior hyperparameter using swot data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @export
@@ -64,7 +71,9 @@ estimate_logA0 <- function(Wobs) {
   #global r2: 0.907
 }
 
-#' Estimate base cross-sectional area lowerbound using bam data
+#' lowerbound_A0 prior estimation
+#' 
+#' Estimate median cross-sectional area lowerbound prior hyperparameter using swot data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix.
 #' @export
@@ -96,7 +105,9 @@ estimate_lowerboundA0 <- function(Wobs) {
   lowerbound_A0 <- min(lowerbound_A0, na.rm = TRUE)
 }
 
-#' Estimate base cross-sectional area upperbound using bam data
+#' Upperbound_A0 prior estimation
+#' 
+#' Estimate median cross-sectional area upperbound prior hyperparameter using swot data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix.
 #' @export
@@ -128,7 +139,9 @@ estimate_upperboundA0 <- function(Wobs) {
   upperbound <- max(upperbound_A0, na.rm = TRUE)
 }
 
-#' Estimate base cross-sectional area SD using bam dat
+#' logA0_sd prior estimation
+#' 
+#' Estimate median cross-sectional area SD prior hyperparameter using swot data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix.
 #' @export
@@ -158,7 +171,9 @@ estimate_A0SD <- function(Wobs) {
   logA0_sd <- ifelse(class != 17, temp[class], 0.58987527)
 }
 
-#' Estimate manning's n using bam data
+#' logn_hat prior estimation
+#' 
+#' Estimate manning's n prior hyperparameter using swot data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix
 #' @param Sobs Observed s, as a space-down, time-across matrix
@@ -190,7 +205,9 @@ estimate_logn <- function(Wobs, Sobs) {
   #Global r2: 0.631
 }
 
-#' Estimate manning's n SD using bam dat
+#' logn_sd prior estimation
+#' 
+#' Estimate manning's n SD prior hyperparameter using swot data
 #'
 #' @param Wobs Observed W,as a space-down, time-across matrix.
 #' @export
