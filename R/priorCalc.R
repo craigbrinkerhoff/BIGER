@@ -17,7 +17,7 @@ estimate_logk <- function(Sobs, priorQ){
   colSobs <- colMeans(Sobs, na.rm=T)
   
   #prior via Brinkerhoff etal 2019 rating curves and Qwbm prior
-  khat <- rep(log(62.82*(9.8*colSobs)^(7/16)*(0.265*priorQ^0.395)^(9/16)*(0.284*priorQ^0.191)^(1/4), ncol(Sobs)))
+  khat <- log(62.82*(9.8*colSobs)^(7/16)*(0.265*priorQ^0.395)^(9/16)*(0.284*priorQ^0.191)^(1/4))
 }
 
 #' logk_sd prior estimation
