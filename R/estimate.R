@@ -11,9 +11,11 @@
 #' @param bikerpriors A bikerpriors object.
 #' @param cores Number of processing cores for running chains in parallel.
 #'   See \code{?rstan::sampling}. Defaults to \code{parallel::detectCores()}.
-#' @param meas_error Should we run with latent variables accounting for uncertainity in SWOT measurements. LEAVE THIS OFF, IT IS IN ACTIVE DEVELOPMENT
+#' @param meas_error Should we run with latent variables accounting for uncertainty in SWOT measurements. LEAVE THIS OFF, IT IS IN ACTIVE DEVELOPMENT
 #' @param chains A positive integer specifying the number of Markov chains. The default is 3.
 #' @param iter Number of iterations per chain (including warmup). Defaults to 1000.
+#' @param CI: Confidence intervals, defaults to 95%, i.e.e 0.95
+#' @param chainExtract: Which chains to use to construct the posterior k600. Defaults to all.
 #' @param pars (passed to \code{rstan::sampling()}) A vector of character strings specifying parameters of interest to be returned in the stanfit object. If not specified, a default parameter set is returned.
 #' @param include (passed to \code{rstan::sampling()}) Defaults to FALSE, which
 #'   excludes parameters specified in \code{pars} from the returned model.
@@ -27,6 +29,8 @@ biker_estimate <- function(bikerdata,
                          meas_error = FALSE,
                          chains = 3L,
                          iter = 1000L,
+                         CI = 0.95,
+                         chainExtract = 'all',
                          pars = NULL,
                          include = FALSE,
                          ...) {
@@ -52,49 +56,20 @@ biker_estimate <- function(bikerdata,
                   pars = NULL, include = include,
                   ...)
 
-  fitmodel
-}
-
-#' Extract posterior
-#'
-#' Extracts posterior parameters from fit stan model
-#'
-#' @param fitmodel A fitted BIKER stanmodel
-#' @param CI A postive integer between 0 and 1 indicating the confidence interval to return with the estimate. Default is 0.95.
-#' @param chainExtract Either an integer specifying which chain(s) to extract statistics from,
-#'   or "all" (the default), in which case they are extracted from all chains.
-#' @import dplyr
-#' @import rstan
-#' @importFrom reshape2 melt
-#' @importFrom stats quantile
-#' @importFrom stats sd
-#' @export
-biker_extract <- function(fitmodel,
-                          CI = 0.95,
-                          chainExtract = 'all'){
-
   #extract posterior means, sigmas, and CIs from full posterior approximation
   kpost <- extract(fitmodel, pars='logk', permuted = FALSE) %>%
     melt()
-
-  #extract posterior means, sigmas, and CIs from full posterior approximation
-  A0post <- extract(fitmodel, pars='A0', permuted = FALSE) %>%
-    melt()
-
-  #extract posterior means, sigmas, and CIs from full posterior approximation
-  npost <- extract(fitmodel, pars='logn', permuted = FALSE) %>%
-    melt()
-
+  
   if (CI <= 0 || CI >= 1)
     stop("CI must be on the interval (0,1).\n")
-
+  
   alpha <- 1 - CI
-
+  
   nchains <- fitmodel@sim$chains
   if (chainExtract == "all")
     chainExtract <- 1:nchains
   stopifnot(is.numeric(chainExtract))
-
+  
   #get k stats
   kstats <- kpost %>%
     mutate(chains = gsub("^chain:", "", .data$chains)) %>%
@@ -102,43 +77,16 @@ biker_extract <- function(fitmodel,
     mutate(value = exp(.data$value)) %>%
     group_by(.data$parameters) %>%
     summarize(mean = mean(.data$value),
-                     conf.low = quantile(.data$value, alpha / 2),
-                     conf.high = quantile(.data$value, 1 - (alpha / 2)),
-                     sigma = sd(.data$value)) %>%
+              conf.low = quantile(.data$value, alpha / 2),
+              conf.high = quantile(.data$value, 1 - (alpha / 2)),
+              sigma = sd(.data$value)) %>%
     rename(time = .data$parameters) %>%
     mutate(time = gsub("^logk\\[", "", .data$time),
-                  time = gsub("\\]$", "", .data$time),
-                  time = as.numeric(.data$time)) %>%
+           time = gsub("\\]$", "", .data$time),
+           time = as.numeric(.data$time)) %>%
     arrange(.data$time)
-
-  #get A0 stats
-  A0stats <- A0post %>%
-    mutate(chains = gsub("^chain:", "", .data$chains)) %>%
-    filter(.data$chains %in% chainExtract) %>%
-    group_by(.data$parameters) %>%
-    summarize(mean = mean(.data$value),
-                     conf.low = quantile(.data$value, alpha / 2),
-                     conf.high = quantile(.data$value, 1 - (alpha / 2)),
-                     sigma = sd(.data$value)) %>%
-    mutate(xs = substr(.data$parameters, nchar(as.character(.data$parameters))-1, nchar(as.character(.data$parameters))-1)) %>%
-    select(c('xs', 'mean', 'conf.low', 'conf.high', 'sigma'))
-
-  #get n stats
-  nstats <- npost %>%
-    mutate(chains = gsub("^chain:", "", .data$chains)) %>%
-    filter(.data$chains %in% chainExtract) %>%
-    mutate(value = exp(.data$value)) %>%
-    group_by(.data$parameters) %>%
-    summarize(mean = mean(.data$value),
-                     conf.low = quantile(.data$value, alpha / 2),
-                     conf.high = quantile(.data$value, 1 - (alpha / 2)),
-                     sigma = sd(.data$value)) %>%
-    mutate(xs = substr(.data$parameters, nchar(as.character(.data$parameters))-1, nchar(as.character(.data$parameters))-1)) %>%
-    select(c('xs', 'mean', 'conf.low', 'conf.high', 'sigma'))
-
-  out <- list(kstats, A0stats, nstats)
-  names(out) <- c('k600', 'A0', 'n')
-  out
+  
+  kstats
 }
 
 

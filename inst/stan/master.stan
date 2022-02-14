@@ -191,10 +191,6 @@ transformed parameters {
       logA_man[1] = log(ragged_col(A0[1], hasdat) + dApos_act[1]);
       logk_man[1] = ragged_row(logk, hasdat);
 
-      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model' with eS
-      //eq_lhs[1] = log(76.4) + (0.5625)*log(9.8) + (0.5625)*log(Sact[1]) - (0.6875)*log(Wact[1]);
-      //eq_rhs[1] = logk_man[1] - (0.6875)*logA_man[1];
-
       //Brinkehoff implementation of Moog & Jirka's 'chainsaw model' with eD
       eq_lhs[1] = log(62.82) + (0.4375)*log(9.8) + (0.5625)*log(Sact[1]) - (0.7291667)*log(Wact[1]);
       eq_rhs[1] = logk_man[1] + (0.25)*ragged_col(logn[1], hasdat) - (0.7291667)*logA_man[1];
@@ -203,10 +199,6 @@ transformed parameters {
     else { //No measurement error in slopes and heights
       logk_man[1] = ragged_row(logk, hasdat);
       logA_man[1] = log(ragged_col(A0[1], hasdat) + dApos_obs);
-
-      //Brinkehoff implementation of Moog & Jirka's 'chainsaw model' with eS
-  //    eq_lhs[1] = log(76.4) + (0.5625)*log(9.8) + (0.5625)*logSobs_man - (0.6875)*logWobs_man;
-  //    eq_rhs[1] = logk_man[1] - (0.6875)*logA_man[1];
 
       //Brinkehoff implementation of Moog & Jirka's 'chainsaw model' with eD
       eq_lhs[1] = log(62.82) + (0.4375)*log(9.8) + (0.5625)*logSobs_man - (0.7291667)*logWobs_man;

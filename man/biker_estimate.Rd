@@ -11,6 +11,8 @@ biker_estimate(
   meas_error = FALSE,
   chains = 3L,
   iter = 1000L,
+  CI = 0.95,
+  chainExtract = "all",
   pars = NULL,
   include = FALSE,
   ...
@@ -24,7 +26,7 @@ biker_estimate(
 \item{cores}{Number of processing cores for running chains in parallel.
 See \code{?rstan::sampling}. Defaults to \code{parallel::detectCores()}.}
 
-\item{meas_error}{Should we run with latent variables accounting for uncertainity in SWOT measurements. LEAVE THIS OFF, IT IS IN ACTIVE DEVELOPMENT}
+\item{meas_error}{Should we run with latent variables accounting for uncertainty in SWOT measurements. LEAVE THIS OFF, IT IS IN ACTIVE DEVELOPMENT}
 
 \item{chains}{A positive integer specifying the number of Markov chains. The default is 3.}
 
@@ -37,6 +39,10 @@ excludes parameters specified in \code{pars} from the returned model.}
 
 \item{...}{Other arguments passed to rstan::sampling() for customizing the
 Monte Carlo sampler}
+
+\item{CI:}{Confidence intervals, defaults to 95%, i.e.e 0.95}
+
+\item{chainExtract:}{Which chains to use to construct the posterior k600. Defaults to all.}
 }
 \description{
 Fits a BIKER model of one of several variants using Hamiltonian Monte Carlo.
