@@ -1,7 +1,7 @@
 # BIKER
 "Bayesian Inference of the K600 Evasion Rate"
 
-BIKER enables inference of the normalized riverine gas exchange velocity from measurements of river surface width and height/slope. It does so using Bayesian inference and a Hamiltonian Monte Carlo sampler to generate a posterior distribution for a gas exchange model. BIKER was developed in the context of the upcoming NASA/CNES/UKSA/CSA SWOT mission (https://swot.jpl.nasa.gov/mission/overview/). The academic manuscript associated with its development and validation is in preparation. The code for developing and validating BIKER (as well as writing the manuscript in RMarkdown) is available at https://github.com/craigbrinkerhoff/RSK600.
+BIKER enables inference of the normalized riverine gas exchange velocity from measurements of river surface width and height/slope. It does so using Bayesian inference and a Hamiltonian Monte Carlo sampler to generate a posterior distribution for a gas exchange model. BIKER was developed in the context of the upcoming NASA/CNES/UKSA/CSA SWOT mission (https://swot.jpl.nasa.gov/mission/overview/).
 
 ## Installation
 #### Dependencies
