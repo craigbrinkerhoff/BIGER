@@ -74,7 +74,7 @@ biker_estimate <- function(bikerdata,
   kstats <- kpost %>%
     dplyr::mutate(chains = gsub("^chain:", "", {{ chains }})) %>%
     dplyr::filter({{ chains }} %in% chainExtract) %>%
-    dplyr::mutate(value = exp({{ value }})) %>%
+    dplyr::mutate("{{value}}" := exp({{ value }})) %>%
     dplyr::group_by({{ parameters }}) %>%
     dplyr::summarize(mean = mean({{ value }}),
               conf.low = quantile({{ value }}, alpha / 2),
