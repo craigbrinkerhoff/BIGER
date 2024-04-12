@@ -23,14 +23,15 @@ estimate_logk <- function(Sobs, priorQ){
 #' logk_sd prior estimation
 #' 
 #' Estimate k sd prior hyperparameter using swot data
+#' Due to both hydraulic assumptions AND mechanistic uncertainties in gas exchange
+#' FOund via Bayesian linear regression. See manuscript.
 #'
 #' @param Sobs Observed S,as a space-down, time-across matrix
 #' @export
 estimate_logksd <- function(Sobs){
   Sobs[Sobs <=0] <- NA
 
-  #ksd <- rep(log(3.45), ncol(Sobs)) #standard error for CHAINSAW/ES MODEL
-  ksd <- rep(0.30, ncol(Sobs)) #standard error for CHAINSAW/ED MODEL
+  ksd <- rep(0.58, ncol(Sobs)) #standard error for k600 equation due do hydraulic assumptions AND mechanistic uncertainty
 }
 
 # Prior calculation using geoBAM-Expert classification framework------------------------------------------------------------------

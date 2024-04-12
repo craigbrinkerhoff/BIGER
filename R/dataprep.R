@@ -182,7 +182,7 @@ biker_priors <- function(bikerdata,
   sigma_paramset <- c('sigma_post', 'Serr_sd', 'dAerr_sd', 'Werr_sd')
   sigma_paramset <- params[sigma_paramset]
 
-  #total priors needed to run geoBAM
+  #total priors needed to run BIKER
   biker_paramset <- c("lowerbound_logk", "upperbound_logk", "lowerbound_A0","upperbound_A0", "lowerbound_logn", "upperbound_logn",
                       "logA0_hat","logk_hat","logn_hat",
                       "logA0_sd", "logk_sd", "logn_sd")

@@ -58,7 +58,7 @@ biker_estimate <- function(bikerdata,
 
   #extract posterior means, sigmas, and CIs from full posterior approximation
   kpost <- extract(fitmodel, pars='logk', permuted = FALSE) %>%
-    melt()
+    reshape2::melt()
   
   if (CI <= 0 || CI >= 1)
     stop("CI must be on the interval (0,1).\n")
@@ -72,19 +72,19 @@ biker_estimate <- function(bikerdata,
   
   #get k stats
   kstats <- kpost %>%
-    mutate(chains = gsub("^chain:", "", .data$chains)) %>%
-    filter(.data$chains %in% chainExtract) %>%
-    mutate(value = exp(.data$value)) %>%
-    group_by(.data$parameters) %>%
-    summarize(mean = mean(.data$value),
-              conf.low = quantile(.data$value, alpha / 2),
-              conf.high = quantile(.data$value, 1 - (alpha / 2)),
-              sigma = sd(.data$value)) %>%
-    rename(time = .data$parameters) %>%
-    mutate(time = gsub("^logk\\[", "", .data$time),
-           time = gsub("\\]$", "", .data$time),
-           time = as.numeric(.data$time)) %>%
-    arrange(.data$time)
+    dplyr::mutate(chains = gsub("^chain:", "", {{ chains }})) %>%
+    dplyr::filter({{ chains }} %in% chainExtract) %>%
+    dplyr::mutate(value = exp({{ value }})) %>%
+    dplyr::group_by({{ parameters }}) %>%
+    dplyr::summarize(mean = mean({{ value }}),
+              conf.low = quantile({{ value }}, alpha / 2),
+              conf.high = quantile({{ value}}, 1 - (alpha / 2)),
+              sigma = sd({{ value }})) %>%
+    dplyr::rename(time = {{ parameters }}) %>%
+    dplyr::mutate(time = gsub("^logk\\[", "", {{ time }}),
+              time = gsub("\\]$", "", {{ time }}),
+              time = as.numeric({{ time }})) %>%
+    dplyr::arrange({{ time }})
   
   kstats
 }
