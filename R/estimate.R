@@ -74,17 +74,17 @@ biker_estimate <- function(bikerdata,
   kstats <- kpost %>%
     dplyr::mutate(chains = gsub("^chain:", "", {{ chains }})) %>%
     dplyr::filter({{ chains }} %in% chainExtract) %>%
-    dplyr::mutate(value_exp = exp({{ value }})) %>%
-    dplyr::group_by({{ parameters }}) %>%
-    dplyr::summarize(mean = mean({{ value_exp }}),
-              conf.low = quantile({{ value_exp }}, alpha / 2),
-              conf.high = quantile({{ value_exp}}, 1 - (alpha / 2)),
-              sigma = sd({{ value_exp }})) %>%
-    dplyr::rename(time = {{ parameters }}) %>%
-    dplyr::mutate(time = gsub("^logk\\[", "", {{ time }}),
-              time = gsub("\\]$", "", {{ time }}),
-              time = as.numeric({{ time }})) %>%
-    dplyr::arrange({{ time }})
+    dplyr::mutate(value = exp(.data$value)) %>%
+    dplyr::group_by(.data$parameters) %>%
+    dplyr::summarize(mean = mean(.data$value),
+                     conf.low = quantile(.data$value, alpha / 2),
+                     conf.high = quantile(.data$value, 1 - (alpha / 2)),
+                     sigma = sd(.data$value)) %>%
+    dplyr::rename(time = .data$parameters) %>%
+    dplyr::mutate(time = gsub("^logk\\[", "", .data$time),
+                  time = gsub("\\]$", "", .data$time),
+                  time = as.numeric(.data$time)) %>%
+    dplyr::arrange(.data$time)
   
   kstats
 }
