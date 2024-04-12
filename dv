@@ -1,0 +1,81 @@
+[33m7c9894d[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m fixing {{value}} bug (also melt() explicit function call was previous commit)
+[33mb38ca0f[m upgraded data masking for dplyr 0.7.0 and swapped ksd hyperparameter
+[33m0577e72[m[33m ([m[1;33mtag: v1.0.0[m[33m)[m review r1 version
+[33m9cf8d5a[m bug in likelihood
+[33med996ea[m updated posterior for review v1
+[33m4042849[m[33m ([m[1;33mtag: v1.0.0-beta[m[33m)[m Fixed another khat bug
+[33md8f8348[m fixed k600 prior
+[33m09482ee[m fixed README typo
+[33m1a8b434[m k prior bug
+[33m58f39a2[m version 1,0
+[33md13d3fd[m updated check_args with priorQ
+[33m0ba9722[m add cran manual
+[33m91d6af1[m fixed bug and ran proper cmd check
+[33mbe06a01[m new logk prior
+[33m11be97f[m first push for eD+chainsaw model
+[33mc31dc37[m further add show_messages fflag that is linked to suppresOutput
+[33m9c6c788[m added ability to suppress stan sampling output to console
+[33m8fe87a2[m chainsaw model implementation
+[33ma35d534[m updated README
+[33mb97769f[m removed in line latex math from readme booooooooooo
+[33m86aa1f3[m updated README
+[33m426583d[m changed A0 bounds to 5/95 percentiles
+[33mcd4c125[m khat bug fix
+[33mf154f20[m A0 bounds to the 10th/90th percentiles
+[33m954ac65[m updated k prior
+[33m684dd55[m return to latent variables for space and time inversion
+[33mb7297fc[m forgot to remove function markdowns
+[33mea99169[m removing latent variables test
+[33m4a2d7c3[m added Werr_sd
+[33m4f0e15c[m remove model references to estimate func
+[33mf52c0ec[m forgot this one too
+[33m9cf61c8[m prior settings typo
+[33m39ad8e7[m remove ko2 references
+[33m70736ed[m log bug in khat
+[33ma553e6e[m fixed some parameters
+[33m7a31495[m k600 priors updated using ulseth data
+[33mf289199[m removed old models
+[33m90bafd0[m undid 'bug' fix and changed to my ustar model
+[33m45b3664[m exp of logA0hat 'bug'
+[33m812e2b4[m vector bug
+[33me06fd5b[m Wobs vs Sobs typo
+[33m2c7b2bf[m Wobs/W_obs typo
+[33ma6363f6[m prior_settings bug
+[33mf9ba148[m moved kmodel to priors function
+[33ma3779ff[m Merge branch 'main' of https://github.com/craigbrinkerhoff/BIGEER into main
+[33m20547d9[m moved kdesired to bikerpriors
+[33mecea228[m moved kdesired to bikerpriors
+[33mf28e050[m update function helpers
+[33m95e8d9e[m both k models implemented in the package
+[33m86e9c6c[m revert back to eD model
+[33m1f76597[m so many typos...
+[33mc6ec44b[m fixed gits weird shit
+[33me656dd4[m something
+[33m7309725[m switch to Wang 2021 Kl20 model
+[33m7a2a064[m switch to Wang 2021 Kl20 model
+[33ma473121[m updated k prior to align with new upscaling function
+[33ma984da8[m fixed k600 func again
+[33m9269de3[m remove double log
+[33mbcea633[m updated parameters for k600 equation
+[33mbca3082[m fixed bug in stan model
+[33mcf20a1e[m re added cv back in
+[33ma36b61b[m removed reduant functions (method of moments and classify func)
+[33m1adca9f[m readme + removed some reducent code
+[33m9e50de2[m fixed meas flag
+[33ma2a7d4d[m latent measurement variables & new k600 prior
+[33mff36325[m k prior
+[33m18e16ab[m new k600 prior
+[33me089de3[m slope-based k600 prior
+[33mee4dcfc[m new k600 priors using geoBAM ds
+[33m9967ca3[m log bug in k600 classification function
+[33m09298a0[m fixed mean of log bug + rename
+[33m01e95d2[m typo in roxygen
+[33m17b8fa1[m name change
+[33m1903696[m Removing redundant code
+[33m24c451d[m Merge branch 'main' of https://github.com/craigbrinkerhoff/BIGEER into main
+[33me415e8d[m Sobs in k prior functions
+[33mb426ac9[m Update README.md
+[33m1381892[m Update README.md
+[33m50d6369[m updated model parameters
+[33m45cf511[m bigge to bigee
+[33mc67032e[m Initial commit
