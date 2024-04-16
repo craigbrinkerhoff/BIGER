@@ -124,8 +124,13 @@ biker_check_nas <- function(datalist) {
   w_test_col <- apply(datalist[["Wobs"]],2, function(x){sum(x>0, na.rm=T)})  #make sure at least 3 observations for width sd calculation for priors
   w_test_row <- apply(datalist[["Wobs"]],1, function(x){sum(x>0, na.rm=T)})  #make sure at least 3 observations for width sd calculation for priors
   if(any(w_test_col<2 | w_test_row < 2)){
-    stop('Need at least 3 non-NA values in each row and column to calculate some priors!')}
+    stop('Need at least 3 non-NA widths in each row and column to calculate some priors!')}
 
+  s_test_col <- apply(datalist[["Sobs"]],2, function(x){sum(x>0, na.rm=T)})  #make sure at least 3 observations for slope sd calculation for priors
+  s_test_row <- apply(datalist[["Sobs"]],1, function(x){sum(x>0, na.rm=T)})  #make sure at least 3 observations for slope sd calculation for priors
+  if(any(s_test_col<2 | s_test_row < 2)){
+    stop('Need at least 3 non-NA slopes in each row and column to calculate some priors!')}  
+  
   #dA error checks
   if (!is.null(datalist[["dAobs"]])) {
     dA_shift <- apply(datalist[["dAobs"]], 1, function(x) median(x) - min(x))
