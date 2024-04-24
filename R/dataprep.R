@@ -113,9 +113,9 @@ biker_check_nas <- function(datalist) {
     hasdat <- hasdat_w * hasdat_s * hasdat_a
 
     # Replace NA's with zeros so Stan will accept the data
-    datalist[["Sobs"]][!hasdat] <- 0
-    datalist[["dAobs"]][!hasdat] <- 0
-    datalist[["Wobs"]][!hasdat] <- 0
+    datalist[["Sobs"]][!hasdat_s] <- 0
+    datalist[["dAobs"]][!hasdat_a] <- 0
+    datalist[["Wobs"]][!hasdat_w] <- 0
   } else {
     stop('Not all Mannings observables are present!')
   }
